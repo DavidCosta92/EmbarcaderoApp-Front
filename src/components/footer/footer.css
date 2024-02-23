@@ -1,0 +1,11 @@
+.footer{
+    margin-top: 10vh;
+    height: 15vh;
+    background-color: rgb(255, 200, 0);
+    text-align: center;
+}
+
+.footer svg{
+    width: 30%;
+    height: 30%;
+}
