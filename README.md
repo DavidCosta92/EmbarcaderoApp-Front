@@ -14,5 +14,7 @@ Abrir [https://github.com/DavidCosta92/EmbarcaderoApp]
 ### `Por si quieres saber mas sobre mi..`
 
 **Linkedin: [https://www.linkedin.com/in/david-costa-yafar/]**
+
 **Porfolio: [https://davidcosta92.github.io/porfolio-david-costa/]**
+
 **Email: david.costa.yafar@gmail.com**
