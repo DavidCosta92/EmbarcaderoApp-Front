@@ -1,0 +1,10 @@
+.recordContainer{
+    width: 90%;
+    padding: 20px;
+
+}
+.recordContainer span.tableHeader{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}

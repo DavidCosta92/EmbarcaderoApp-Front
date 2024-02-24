@@ -39,7 +39,7 @@ export default class AppContent extends React.Component {
             .catch( (error) =>{
                 console.log(" ======== error >>>>"+error)                
                 setAuthHeader(null);
-                this.setState( {componentToShow : "welcome" /* ACA DEBERIA IR EL elemento A MOSTRAR SI TODO MAL */} ) 
+                this.setState( {componentToShow : "welcome"} ) 
             })
     }
 
@@ -65,7 +65,7 @@ export default class AppContent extends React.Component {
             })
             .catch( (error) =>{
                 setAuthHeader(null);
-                this.setState( {componentToShow : "welcome" /* ACA DEBERIA IR EL elemento A MOSTRAR SI TODO MAL */} ) 
+                this.setState( {componentToShow : "welcome"} ) 
             })
     }
 

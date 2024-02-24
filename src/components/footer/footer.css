@@ -1,11 +1,26 @@
 .footer{
     margin-top: 10vh;
     height: 15vh;
-    background-color: rgb(255, 200, 0);
+    background-color: rgb(145, 145, 145);
     text-align: center;
 }
+.footer h3{
+    width: 50%;
+    margin: auto;
+    background-color: red;
+    color: white;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 2rem;
+}
+.footer .logos{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 
-.footer svg{
-    width: 30%;
-    height: 30%;
+}
+
+.footer svg, .footer img{
+    width: 15%;
+    height: 15%;
 }

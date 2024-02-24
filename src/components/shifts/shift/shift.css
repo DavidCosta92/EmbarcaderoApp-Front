@@ -1,0 +1,50 @@
+.actualShift{
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    border: 2px solid grey;
+    border-radius: 30px;
+    gap: 20px;
+    padding: 20px;
+}
+.actualShift .header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80vw;
+
+}
+.actualShift .header div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+
+}
+.actualShift .header div ul{
+    list-style: none;
+
+}
+.actualShift .notes{
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 5px;
+    width: 70%;
+    height: auto;
+}
+.actualShift div.buttons{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+
+}
+
+.spinnerWheel span{
+    margin: auto;
+    margin-top: 30px;
+    height: 75px;
+    width: 75px;
+
+}

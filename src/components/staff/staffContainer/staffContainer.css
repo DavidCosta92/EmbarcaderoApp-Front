@@ -1,0 +1,10 @@
+.staffContainer{
+    width: 90%;
+    padding: 20px;
+}
+
+.staffContainer span.tableHeader{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}

@@ -4,14 +4,16 @@ import logo from "../../logo.svg"
 import Header from '../header/header'
 import AppContent from '../appContent/appContent'
 import Footer from '../footer/footer'
+import AuthProvider from '../utils/authContext'
 
 
 export default function App (){
     return(
-        <div>
+        <AuthProvider> {/*  value = {[this.state.data.username]}  */}
             <Header pageTitle="Embarcadero app" logoSrc={logo}/>
             <AppContent/>
             <Footer/>
-        </div>
+        </AuthProvider>   
+            
     )
 }
