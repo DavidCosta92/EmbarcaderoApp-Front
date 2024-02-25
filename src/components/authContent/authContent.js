@@ -1,44 +1,55 @@
 // @ts-nocheck
 import * as React from 'react'
+import { useContext , useEffect, useState} from "react";
+import { AuthContext } from '../utils/authContext';
 import {request, setAuthHeader} from "../utils/axios_helper"
 import UserDetails from '../userDetails/userDetails'
 
 import "./authContent.css"
 import Dashboard from '../dashboards/dashboard'
 
+export default function AuthContent (){    
+    const {loguedUser, setLoguedUser, renderSpiner} = useContext(AuthContext)
 
-export default class AuthContent extends React.Component{
-    constructor(props){
-        super(props)
-        this.state = {
-            data : []
-        }
-    }
-    componentDidMount() {
+    const [loading, setLoading ] = useState(true);
+
+    useEffect(()=>{
+        getUserDetails ()
+    }, [])
+
+    function getUserDetails(){
         request(
             "GET",
             "auth/userDetails",
             {}).then(
             (response) => {
-                this.setState({data: response.data})                
+                setLoading(false)
+                setLoguedUser(response.data)
             }).catch(
             (error) => {
+                console.log ("***********>>> "+error)
                 if (error.response.status === 401) {
                     setAuthHeader(null);
                 } else {
                     this.setState({data: error.response.code})
                 }
-
+    
             }
         );
     }
 
-    render() {        
-        return (            
+    function renderContent(){
+        return (
             <div>
-                { this.state.data && <UserDetails user={this.state.data}/> }
-                { this.state.data && <Dashboard user={this.state.data}/>}
-            </div>        
+                <UserDetails/>
+                <Dashboard role={loguedUser.role}/>
+             </div>
         )
-      };
     }
+
+    return (
+        <>
+           { loading?  renderSpiner() : renderContent() }
+        </>  
+    )
+}

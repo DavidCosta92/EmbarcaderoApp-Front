@@ -9,7 +9,7 @@ import AuthProvider from '../utils/authContext'
 
 export default function App (){
     return(
-        <AuthProvider> {/*  value = {[this.state.data.username]}  */}
+        <AuthProvider>
             <Header pageTitle="Embarcadero app" logoSrc={logo}/>
             <AppContent/>
             <Footer/>

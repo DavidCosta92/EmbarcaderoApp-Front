@@ -2,10 +2,10 @@
 import Shift from "../../shifts/shift/shift"
 import "./lifeguardDashboard.css"
 
-export default function LifeguardDashboard ({user}){
+export default function LifeguardDashboard (){
     return(
         <>
-        <Shift user={user}/>
+        <Shift/>
         {/* <Boton para ir a pantalla para ver Historial de shifts/> */}
         {/* <Boton para ir a pantalla para ver Licencias/> */}
 

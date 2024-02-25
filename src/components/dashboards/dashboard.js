@@ -4,12 +4,12 @@ import "./dashboard.css"
 import LifeguardDashboard from "./lifeguard/lifeguardDashboard"
 import OfficeDashboard from "./office/officeDashboard"
 
-export default function Dashboard ({user}){
+export default function Dashboard ({role}){
     return(
         <div className="container-fluid ">
-            { user.role === "LIFEGUARD" && <LifeguardDashboard user={user}/> }
-            { user.role === "OFFICE" && <OfficeDashboard user={user}/> }
-            { user.role === "ADMIN" && <AdminDashboard user={user}/> }
+            { role === "LIFEGUARD" && <LifeguardDashboard/> }
+            { role === "OFFICE" && <OfficeDashboard /> }
+            { role === "ADMIN" && <AdminDashboard /> }
         </div>
     )
 }

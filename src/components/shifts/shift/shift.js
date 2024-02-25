@@ -3,10 +3,12 @@ import "./shift.css"
 import RecordsContainer from "../../records/recordsContainer/recordsContainer.js"
 import StaffContainer from "../../staff/staffContainer/staffContainer.js"
 import { request } from "../../utils/axios_helper.js";
-import { useEffect, useState } from "react";
-import { Box, CircularProgress } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../utils/authContext.js";
 
-export default function Shift ({user}){    
+export default function Shift (){    
+
+    const {loguedUser, renderSpiner} = useContext(AuthContext)
 
     const [loading, setLoading] = useState (true);
     const [ shift, setShift] = useState ();
@@ -28,20 +30,9 @@ export default function Shift ({user}){
 
     useEffect(()=>{
         setLoading(true)
-        getShiftByIdUser(user.id)
+        getShiftByIdUser(loguedUser.id)
     }, [])
 
-
-    function renderSpiner(){
-        return(
-            <div className="spinner"> 
-                <Box sx={{ display: 'flex' }}  className="spinnerWheel">
-                    <CircularProgress color="primary" size="lg"/>
-                </Box>
-
-            </div>           
-        )
-    }
     function renderShift (){
         return(
             <div className="actualShift">
