@@ -1,5 +1,6 @@
 // @ts-nocheck
 import Record from "../record"
+import { Link } from "react-router-dom";
 import "./recordsContainer.css"
 
 export default function RecordsContainer({records}){  
@@ -7,7 +8,7 @@ export default function RecordsContainer({records}){
         <div className="alert alert-secondary recordContainer">
             <span className="tableHeader">
                 <h4>Registros de la guardia</h4>
-                <a href="#" class="btn btn-success btn-lg" tabindex="-1" role="button" aria-disabled="true">Link Agregar nuevo registro (pendiente) </a>
+                <Link to="/addNewRecord" className="btn btn-success btn-lg" role="button">Nuevo registro</Link>
             </span>
 
             <table class="table table-secondary table-striped">
@@ -17,8 +18,10 @@ export default function RecordsContainer({records}){
                         <th scope="col">Inicio</th>
                         <th scope="col">Fin</th>
                         <th scope="col">Estado</th>
-                        <th scope="col">Bote</th>
+                        <th scope="col">Tipo Emb</th>
+                        <th scope="col">Nombre Emb</th>
                         <th scope="col">Persona</th>
+                        <th scope="col">Telefono</th>
                         <th scope="col">Invitados</th>
                         <th scope="col">Auto</th>
                         <th scope="col">Notas</th>

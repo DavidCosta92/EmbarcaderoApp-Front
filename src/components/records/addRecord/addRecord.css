@@ -1,0 +1,12 @@
+.addRecordForm{
+    width: 90%;
+    padding: 20px;
+    margin: auto;
+    margin-top: 30px;
+
+}
+
+.pendingPostRequest span{
+    height: 7px;
+    width: 100%;
+}

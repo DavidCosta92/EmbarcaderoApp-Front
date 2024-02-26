@@ -1,0 +1,26 @@
+.spinner div div{
+    width: 100%;
+}
+
+select.record_ACTIVO{
+    background-color: rgba(0, 128, 0, 0.31);
+
+}
+select.record_DESCONOCIDO{
+    background-color: rgba(255, 255, 0, 0.326);
+
+}
+select.record_EGRESADO{
+background-color: rgba(128, 128, 128, 0.314);
+}
+select.record_SINIESTRADO{
+    background-color: rgba(255, 0, 0, 0.315);
+
+}
+select.record_ELIMINADO{
+    background-color: rgba(0, 0, 255, 0.326);
+
+}
+
+
+

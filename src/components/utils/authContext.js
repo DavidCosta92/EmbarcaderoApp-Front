@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState } from 'react'
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, LinearProgress } from "@mui/material";
 
 const AuthContext = React.createContext();
 
@@ -8,6 +8,21 @@ const AuthContext = React.createContext();
 
 const AuthProvider =({children})=>{
     const [loguedUser, setLoguedUser] = useState(false)
+    const [ shiftId, setShiftId ] = useState(null)
+
+    function renderPendingPostRequest(){
+        return(
+            <div className="spinner"> 
+                <Box sx={{ display: 'flex' }}  className="pendingPostRequest">
+                <div class="alert alert-success" role="alert">
+                    <h4 className="alert-heading">Enviando peticion..</h4>
+                    <LinearProgress color="success" />
+                </div>
+                    
+                </Box>
+            </div>           
+        )
+    }
 
     function renderSpiner(){
         return(
@@ -23,7 +38,10 @@ const AuthProvider =({children})=>{
     const data={
         renderSpiner,
         loguedUser,
-        setLoguedUser
+        setLoguedUser,
+        shiftId, 
+        renderPendingPostRequest,
+        setShiftId        
     }
     return (
         <AuthContext.Provider value={data}>

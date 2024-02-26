@@ -1,5 +1,6 @@
 // @ts-nocheck
 import "./record.css"
+import { Link } from "react-router-dom";
 
 export default function Record ({record}){ 
     
@@ -43,29 +44,15 @@ export default function Record ({record}){
             <td>{record.startTime}</td>
             <td>{record.endTime}</td>
             <td>{record.recordState}</td>      
-            <td>
-                <table class="table table-secondary">
-                    <tbody>
-                        <tr><td>{record.boat.name}</td></tr> 
-                        <tr><td>{record.boat.typeBoat_enum}</td></tr>   
-                        <tr><td>Ver mas datos! (Hacer link)</td></tr>                                       
-                    </tbody>
-                </table>  
-            </td>                   
-            <td>
-                <table class="table table-secondary ">
-                    <tbody>
-                        <tr><td>{record.person.name} {record.person.lastName}</td></tr>
-                        <tr><td>{record.person.phone} - {record.person.emergency_phone}</td></tr>     
-                        <tr><td>Ver mas datos! (Hacer link)</td></tr>                                         
-                    </tbody>
-                </table>  
-            </td>
+            <td>{record.boat.typeBoat_enum}</td>      
+            <td>{record.boat.name}</td>                   
+            <td>{record.person.lastName} {record.person.name}</td>
+            <td>{record.person.phone} - {record.person.emergency_phone}</td>
             <td>{record.numberOfGuests}</td>
             <td>{record.car}</td>
             <td>{record.notes}</td>   
             <td>
-                <a href="#" class="btn btn-warning btn-lg" tabindex="-1" role="button" aria-disabled="true">Btn editar (pendiente) </a>
+                <Link to={`/recordDetails/${record.id}`} className="btn btn-outline-success" role="button">Ver mas</Link>
             </td>  
         </tr>
     )

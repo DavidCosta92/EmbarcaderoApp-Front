@@ -8,7 +8,7 @@ import { AuthContext } from "../../utils/authContext.js";
 
 export default function Shift (){    
 
-    const {loguedUser, renderSpiner} = useContext(AuthContext)
+    const {loguedUser, renderSpiner, setShiftId} = useContext(AuthContext)
 
     const [loading, setLoading] = useState (true);
     const [ shift, setShift] = useState ();
@@ -20,6 +20,7 @@ export default function Shift (){
             {}).then(
             (response) => {                
                 setShift(response.data)
+                setShiftId(response.data.id)
                 setLoading(false)   
             }).catch(
             (error) => {

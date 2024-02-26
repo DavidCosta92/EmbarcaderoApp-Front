@@ -1,3 +1,4 @@
+/*
 export const getShiftById = 
 {
     "id": 7,
@@ -56,3 +57,4 @@ export const getShiftById =
     "notes": "Primera guardia creada! ",
     "close": null
 }
+*/
