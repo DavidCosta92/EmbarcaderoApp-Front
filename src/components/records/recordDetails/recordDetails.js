@@ -6,6 +6,26 @@ import { request } from "../../utils/axios_helper.js";
 import { AuthContext } from "../../utils/authContext.js";
 
 export default function RecordDetails (){
+
+
+    // const { register, formState:{errors}, handleSubmit, watch } = useForm({defaultValues:{ username:"para actualizar me sirve esto!"} })
+    // PUEDO PASAR COMO VALORES POR DEFECTO A LOS QUE ME TRAE LA BD Y QUE EL USER SOLO MODIFIQUE PARTES
+    // PUEDO PASAR COMO VALORES POR DEFECTO A LOS QUE ME TRAE LA BD Y QUE EL USER SOLO MODIFIQUE PARTES
+
+    // PUEDO PASAR COMO VALORES POR DEFECTO A LOS QUE ME TRAE LA BD Y QUE EL USER SOLO MODIFIQUE PARTES
+
+    // PUEDO PASAR COMO VALORES POR DEFECTO A LOS QUE ME TRAE LA BD Y QUE EL USER SOLO MODIFIQUE PARTES
+
+    // PUEDO PASAR COMO VALORES POR DEFECTO A LOS QUE ME TRAE LA BD Y QUE EL USER SOLO MODIFIQUE PARTES
+
+    // PUEDO PASAR COMO VALORES POR DEFECTO A LOS QUE ME TRAE LA BD Y QUE EL USER SOLO MODIFIQUE PARTES
+
+
+
+
+
+
+
     const {loguedUser , renderSpiner , shiftId , renderPendingPostRequest} = useContext(AuthContext)
     const {id} = useParams();
 
@@ -114,6 +134,7 @@ export default function RecordDetails (){
         return(
             <>
             <form onSubmit={onSubmitRegister}>             
+            <h1 className = "funcionalidadPendiente">EDITAR REGISTRO ==== FUNCIONALIDAD PENDIENTE!</h1>
                 <div className="form-floating mb-4">
                     <select id="recordState" name="recordState" className={"form-select record_"+ record.recordState} onChange={onChangeHandler} value={record.recordState}>
                         <option value="ACTIVO">Activo </option>
@@ -186,7 +207,7 @@ export default function RecordDetails (){
                 <div>        
                     <h5>Embarcacion (solo lectura)</h5>                                                              
                     <div className="form-outline mb-4">
-                        <label className="form-label" htmlFor="licesce">MATRICULA (pendiente)</label>
+                        <label className="form-label funcionalidadPendiente" htmlFor="licesce">MATRICULA (pendiente)</label>
                         <input type="text" id="licesce" name="licesce" className="form-control" disabled value={record.boat.licesce}/>
                     </div>                                                                               
                     <div className="form-outline mb-4">
@@ -230,7 +251,7 @@ export default function RecordDetails (){
                 </div>
             {/* BOAT  */}      
                  
-                  <button type="submit" className="btn btn-outline-danger btn-lg btn-block mb-3">Editar registro</button>
+                  <button type="submit" className="btn btn-outline-danger btn-lg btn-block mb-3 funcionalidadPendiente">Editar registro</button>
             </form>
             <Link to="/dashboard" className="btn btn-secondary btn-lg" role="button">Volver</Link>
             </>

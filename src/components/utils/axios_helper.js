@@ -7,6 +7,9 @@ axios.defaults.headers.post['Content-Type'] = 'application/json'
 export const getAuthToken = () =>{
     return window.localStorage.getItem("auth_token")
 }
+export const clearStorageAuthToken = () =>{
+    return window.localStorage.removeItem("auth_token")
+}
 
 export const setAuthHeader = (token) => {
     if (token !== null) {
