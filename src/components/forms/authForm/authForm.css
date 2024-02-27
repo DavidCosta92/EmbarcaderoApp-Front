@@ -1,3 +1,39 @@
 .inputFormError{
     color: red;
 }
+.authForm{
+    margin: 10vh auto;
+    padding: 0 5vw;
+}
+.authForm form{
+    margin: auto;
+    max-width: 450px;
+}
+.authForm .btnsAuth{
+    display: flex;
+    justify-content: space-around;
+
+}
+
+@media (min-width: 1000px){
+    .authForm form.registerForm{
+        max-width: 800px;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: space-between;
+    }
+    .authForm form.registerForm div{
+        width: 100%;
+        max-width: 350px;
+    }
+    .authForm .btnsAuth{
+        max-width: 500px;
+        margin: auto;
+        width: 100%;
+    
+    }
+    
+
+}

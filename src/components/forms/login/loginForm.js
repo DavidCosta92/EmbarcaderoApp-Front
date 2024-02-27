@@ -8,13 +8,12 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 
 export default function LoginForm ({setForm}){
-    const { loguedUser,setLoguedUser,logout, /*onLogin , onRegister, */renderSpiner, renderPendingPostRequest} = useContext(AuthContext)
+    const { setLoguedUser} = useContext(AuthContext)
     
     const { register, formState:{errors}, handleSubmit, watch } = useForm()
     const navigate = useNavigate()
 
     const sendForm = (data) =>{
-        console.log(data)
         request(
             "POST" ,
             "auth/login",                
@@ -36,16 +35,15 @@ export default function LoginForm ({setForm}){
 
     return(      
     <div className="row justify-content-center">
-        <div className="col-4">
-        
+        <div className="">        
         {/* FORM LOGIN */}
-            <div className="tab-pane" id="pills-login" >
+            <div className="authForm">
                 <form onSubmit={handleSubmit(sendForm)}>
                     <div className="form-outline mb-4">
-                    <input type="login" id="loginUsername" name= "username" className="form-control" {...register("username", {required:true, maxLength:10 })}  />
+                    <input type="login" id="loginUsername" name= "username" className="form-control" {...register("username", {required:true, maxLength:20 })}  />
                     <label className="form-label" htmlFor="loginUsername">Username</label>
                     {errors.username?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
-                    {errors.username?.type === "maxLength" && <p className="inputFormError">Largo maximo de 10 caracteres</p>}
+                    {errors.username?.type === "maxLength" && <p className="inputFormError">Largo maximo de 20 caracteres</p>}
                     </div>
 
                     <div className="form-outline mb-4">
@@ -54,10 +52,12 @@ export default function LoginForm ({setForm}){
                     {errors.password?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                     </div>
 
-                    <button type="submit" className="btn btn-primary btn-block mb-4">Iniciar sesion</button>
-
+                    <span className="btnsAuth">
+                        <button type="submit" className="btn btn-primary btn-block mb-4">Iniciar sesion</button>
+                        <button className="btn btn-secondary btn-block mb-4" onClick={()=> setForm("register")}>Registrarme</button>
+                    </span>
                 </form>
-                <button type="submit" className="btn btn-secondary btn-block mb-4" onClick={()=> setForm("register")}>Registrarme</button>
+                
             </div>        
         </div>
     </div>

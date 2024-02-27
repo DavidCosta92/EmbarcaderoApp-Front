@@ -12,11 +12,6 @@ import foto_user from "../../assets/pictures/profile/foto_user.jpg"
 import AuthForm from '../forms/authForm/authForm'
 
 
-const loguedUserMock ={
-    username: "david hard",
-    profilePicture: foto_user
-}
-
 export default function App (){
     return(
         <BrowserRouter>
@@ -31,7 +26,7 @@ export default function App (){
                     <Route path='/licenses' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}     
                     <Route path='/persons' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}   
 
-                    <Route path='/login' element={<AuthForm/>} />
+                    <Route path='/auth' element={<AuthForm/>} />
                     <Route path='/userProfile' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}   
 
                     

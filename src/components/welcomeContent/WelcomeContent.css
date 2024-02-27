@@ -1,6 +1,5 @@
 .welcomeContent{
     display: flex;
     flex-direction: column;
-    margin: 5vh auto;
-    gap: 5vh;
+    margin: 2vh auto;
 }

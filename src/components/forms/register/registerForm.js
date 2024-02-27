@@ -46,10 +46,10 @@ export default function RegisterForm({setForm}){
 
     return (  
         <div className="row justify-content-center">
-            <div className="col-4">    
+            <div className="">    
             {/*  FORM REGISTER */}
-                <div className="tab-pane" id="pills-register" >
-                    <form onSubmit={handleSubmit(sendForm)}>
+                <div className="authForm" >
+                    <form onSubmit={handleSubmit(sendForm)} className="registerForm">
                         <div className="form-outline mb-4">
                         <input type="text" id="firstName" name="firstName" className="form-control" {...register("firstName", {required:true})} />
                         <label className="form-label" htmlFor="firstName">First name</label>
@@ -91,10 +91,13 @@ export default function RegisterForm({setForm}){
                         <label className="form-label" htmlFor="registerUsername">Username</label>
                         {errors.username?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                         </div>
-        
-                        <button type="submit" className="btn btn-primary btn-block mb-3">Registrarme</button>
+
+                        <span className="btnsAuth">
+                            <button type="submit" className="btn btn-primary btn-block mb-4">Registrarme</button>    
+                            <button className="btn btn-secondary btn-block mb-4" onClick={()=> setForm("login")}>Iniciar sesion</button>
+                        </span>
+                
                     </form>
-                    <button type="submit" className="btn btn-secondary btn-block mb-4" onClick={()=> setForm("login")}>Iniciar sesion</button>
                 </div>
             
             </div>

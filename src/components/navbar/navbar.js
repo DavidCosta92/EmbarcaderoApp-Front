@@ -171,7 +171,7 @@ export default function Navbar(){
                 </Button>
               ))}
             </Box>
-            { !loguedUser? (<Typography textAlign="center" onClick={()=> navigate("/login")}>Iniciar sesion</Typography>) : (
+            { !loguedUser? (<Typography textAlign="center" onClick={()=> navigate("/auth")}>Iniciar sesion</Typography>) : (
               <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Cuenta usuario">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
