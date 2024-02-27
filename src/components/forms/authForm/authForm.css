@@ -9,6 +9,9 @@
     margin: auto;
     max-width: 450px;
 }
+.authForm form .inputDiv{
+    height: 80px;
+}
 .authForm .btnsAuth{
     display: flex;
     justify-content: space-around;

@@ -39,17 +39,17 @@ export default function LoginForm ({setForm}){
         {/* FORM LOGIN */}
             <div className="authForm">
                 <form onSubmit={handleSubmit(sendForm)}>
-                    <div className="form-outline mb-4">
-                    <input type="login" id="loginUsername" name= "username" className="form-control" {...register("username", {required:true, maxLength:20 })}  />
-                    <label className="form-label" htmlFor="loginUsername">Username</label>
-                    {errors.username?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
-                    {errors.username?.type === "maxLength" && <p className="inputFormError">Largo maximo de 20 caracteres</p>}
+                    <div className="form-outline mb-4 inputDiv">
+                        <label className="form-label" htmlFor="loginUsername">Username</label>
+                        <input type="login" id="loginUsername" name= "username" className="form-control" {...register("username", {required:true, maxLength:20 })}  />
+                        {errors.username?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
+                        {errors.username?.type === "maxLength" && <p className="inputFormError">Largo maximo de 20 caracteres</p>}
                     </div>
 
-                    <div className="form-outline mb-4">
-                    <input type="password" id="loginPassword" name="password" className="form-control" {...register("password", {required:true})} />
-                    <label className="form-label" htmlFor="loginPassword">Password</label>
-                    {errors.password?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
+                    <div className="form-outline mb-4 inputDiv">
+                        <label className="form-label" htmlFor="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" name="password" className="form-control" {...register("password", {required:true})} />
+                        {errors.password?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                     </div>
 
                     <span className="btnsAuth">
