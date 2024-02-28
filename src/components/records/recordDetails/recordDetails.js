@@ -2,7 +2,7 @@
 import "./recordDetails.css"
 import { useParams, Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { request } from "../../utils/axios_helper.js";
+import {  getRecordByIdRequest , updateRecordRequest} from "../../utils/axios_helper.js";
 import { AuthContext } from "../../utils/authContext.js";
 
 export default function RecordDetails (){
@@ -75,19 +75,19 @@ export default function RecordDetails (){
     
 
     function getRecordById(id){
-        request(
-            "GET",
-            `records/${id}`,
-            {}).then(
-            (response) => {                
-                setRecord(response.data)
-                setLoading(false) 
-                recordAux = response.data  
-            }).catch(
-            (error) => {
+       const record = getRecordByIdRequest(id)
+       if (record !== null){
+           // revisar codigo
+           // revisar codigo
+           // revisar codigo
+           setRecord(record)
+           setLoading(false) 
+           recordAux = record 
+           // revisar codigo
+           // revisar codigo
+           // revisar codigo
+       }
 
-            }
-        );        
     }
     
    const onChangeHandler = (event) => {    
@@ -111,21 +111,11 @@ export default function RecordDetails (){
    }
    
    function updateRecord(){
-    request(
-            "PATCH",
-            `records/${id}`,
-            record
-            ).then((response) => {      
-                console.log("response >>>> "+ response)
-                console.log("response >>>> "+ response.data)
-                setPendingPostRequest(false)   
-
-            }).catch(
-            (error) => {
-                console.log("error >>>> "+ error)
-                setPendingPostRequest(false)   
-            }
-        )
+        const update = updateRecordRequest(id, record)
+        // terminar de desarrollar
+        // terminar de desarrollar
+        // terminar de desarrollar
+        // terminar de desarrollar
     }
    
     

@@ -2,44 +2,18 @@
 import "./registerForm.css"
 
 import { useContext} from "react";
-import {request , setAuthToken , setAuthHeader} from "../../utils/axios_helper"
 import { AuthContext } from '../../utils/authContext';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 
 export default function RegisterForm({setForm}){
-    const {setLoguedUser} = useContext(AuthContext)
+    const {loguedUser, setLoguedUser, registerUser, loadingUser} = useContext(AuthContext)
     
     const { register, formState:{errors}, handleSubmit, watch } = useForm()
     const navigate = useNavigate()
 
-    const sendForm = (data) =>{
-        console.log(data)
-        
-        request(
-                "POST" ,
-                "auth/register",
-                { 
-                    username : data.username , 
-                    password1 : data.password1,
-                    password2 : data.password2, 
-                    lastName : data.lastName,
-                    firstName : data.firstName, 
-                    phone : data.phone,
-                    dni : data.dni,
-                    email : data.email
-                } )
-            .then( (resp) =>{ 
-                setAuthHeader(resp.data.token);
-                setAuthToken(resp.data.token)
-                setLoguedUser(resp.data)
-                navigate("/dashboard")  
-
-            })
-            .catch( (error) =>{
-                console.log(" ======== error >>>>"+error) 
-                setAuthHeader(null);
-            })
+    const sendForm = (data) =>{        
+        registerUser (data)        
       }
 
 

@@ -6,10 +6,10 @@ export default function StaffContainer({staff}){
         <div className="alert alert-secondary staffContainer">
             <span className="tableHeader">
                 <h4>Personal</h4>
-                <a href="#" class="btn btn-success btn-lg" tabindex="-1" role="button" aria-disabled="true">Link Agregar nuevo staff (pendiente) </a>
+                <a href="#" className="btn btn-success btn-lg" tabIndex="-1" role="button" aria-disabled="true">Link Agregar nuevo staff (pendiente) </a>
             </span>
 
-            <table class="table table-secondary table-striped">
+            <table className="table table-secondary table-striped">
                 <thead>
                     <tr>
                         <th scope="col">id</th>
@@ -25,7 +25,7 @@ export default function StaffContainer({staff}){
                 <tbody>
                     { staff.map( (member) => {
                         return(
-                            <tr>
+                            <tr key={member.id}>
                                 <th scope="row">{member.id}</th>
                                 <td>{member.username}</td>
                                 <td>{member.dni}</td>
@@ -34,7 +34,7 @@ export default function StaffContainer({staff}){
                                 <td>{member.phone}</td>   
                                 <td>{member.role}</td>  
                                 <td>
-                                    <a href="#" class="btn btn-danger btn-lg" tabindex="-1" role="button" aria-disabled="true">Btn eliminar staff (pendiente) </a>
+                                    <a href="#" className="btn btn-danger btn-lg" tabIndex="-1" role="button" aria-disabled="true">Btn eliminar staff (pendiente) </a>
                                     
                                 </td>  
                             </tr>

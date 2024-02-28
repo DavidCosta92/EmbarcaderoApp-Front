@@ -1,26 +1,110 @@
 // @ts-nocheck
-import React, { useState } from 'react'
+import React, { useState , useEffect} from 'react'
 import { Box, CircularProgress, LinearProgress } from "@mui/material";
-import { clearStorageAuthToken } from './axios_helper';
-import {request, setAuthHeader, setAuthToken } from "../utils/axios_helper"
+import { request} from './axios_helper';
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = React.createContext();
 
-/*
-
-ACA DEBO SETEAR EL LOGUED USER DESDE LA MEMORIA... EN OTRAS PALABRAS, SI RECARGO LA APP O SI LA ABRO EN OTRA PESTAÑA
-DEBERIA BUSCAR EL TOKEN GUARDADO, Y SI ESTA DEBERIA ENVIAR UN MENSJAE AL BACK PARA VER SI SIGUE VALIDOOO SI SIGUE,
-MUESTRO EL USER COMO AcTIVEOOO SINO, LO MANDO A LOGUEARSE DE NUEVO!"
-*/
-
 const AuthProvider =({children})=>{
+    const navigate = useNavigate()
     const [loguedUser, setLoguedUser] = useState(false)
-    const [ shiftId, setShiftId ] = useState(null)
+    const [ shift, setShift ] = useState(null)
+    const [ loadingShift, setLoadingShift ] = useState()
+    const [ loadingUser, setLoadingUser ] = useState()
 
-    function logout(){
-        clearStorageAuthToken()
+    useEffect(()=>{
+        setUserFromSessionStorage()
+    }, [])
+
+    function getShiftUser(){          
+        request(
+            "GET",
+            `shifts/user/${loguedUser.id}`,
+            {})
+            .then(
+            (response) => {             
+                setShift(response.data) 
+                setLoadingShift(false)
+            })
+            .catch((error) => {
+                setShift(null)
+            })
     }
-
+    function getAuthToken(){
+        return window.localStorage.getItem("auth_token")
+    }
+    function setAuthHeader(token) {
+        if (token !== null) {
+          window.localStorage.setItem("auth_token", token);
+        } else {
+          window.localStorage.removeItem("auth_token");
+        }
+    }
+    function setAuthToken(token){
+        return window.localStorage.setItem("auth_token", token)
+    }
+    function setUserFromSessionStorage() {   
+        request(
+            "GET",
+            "auth/userDetails",
+            {})
+            .then(
+            (response) => {                       
+                setLoguedUser(response.data)
+                setLoadingUser(false)
+            })
+            .catch((error) => {
+                console.log ("***********>>> "+error)  
+                setAuthHeader(null);              
+            }
+        )
+    }
+    function loginUser(usernameAtt, passwordAtt){        
+        request(
+            "POST" ,
+            "auth/login",                
+            { 
+                username : usernameAtt , 
+                password : passwordAtt
+            } )
+        .then( (resp) =>{   
+            setAuthToken(resp.data.token)  
+            navigate("/dashboard") 
+        })
+        .catch( (error) =>{  
+            setLoguedUser(false)   
+            setAuthHeader(null);  
+        })
+    }
+    function registerUser (data){        
+        request(
+            "POST" ,
+            "auth/register",
+            { 
+                username : data.username , 
+                password1 : data.password1,
+                password2 : data.password2, 
+                lastName : data.lastName,
+                firstName : data.firstName, 
+                phone : data.phone,
+                dni : data.dni,
+                email : data.email
+            } )
+        .then( (resp) =>{ 
+            setAuthHeader(resp.token);
+            setAuthToken(resp.token)
+            setLoguedUser(resp)            
+            navigate("/dashboard")  
+        })
+        .catch( (error) =>{
+            console.log(" ======== error >>>>"+error) 
+            setAuthHeader(null);
+        })
+    }
+    function logout(){
+        return window.localStorage.removeItem("auth_token")
+    }
     function renderPendingPostRequest(){
         return(
             <div className="spinner"> 
@@ -34,7 +118,6 @@ const AuthProvider =({children})=>{
             </div>           
         )
     }
-
     function renderSpiner(){
         return(
             <div className="spinner"> 
@@ -49,11 +132,21 @@ const AuthProvider =({children})=>{
     const data={
         loguedUser,
         setLoguedUser,
+        loadingShift, 
+        setLoadingShift,
+        shift, 
+        setShift,
+        getShiftUser,
+        getAuthToken,
+        setAuthHeader,
+        setAuthToken,
+        setUserFromSessionStorage,
+        loadingUser,
+        loginUser,
+        registerUser,
         logout,
-        shiftId, 
-        setShiftId,        
-        renderSpiner,
-        renderPendingPostRequest
+        renderPendingPostRequest,       
+        renderSpiner
     }
     return (
         <AuthContext.Provider value={data}>

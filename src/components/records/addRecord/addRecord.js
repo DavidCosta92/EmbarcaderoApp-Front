@@ -3,10 +3,10 @@ import "./addRecord.css"
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../utils/authContext";
-import { request } from "../../utils/axios_helper.js";
+import { postNewRecordRequest } from "../../utils/axios_helper.js";
 
 export default function AddRecord(){
-    const {loguedUser, shiftId, renderPendingPostRequest } = useContext(AuthContext)
+    const {shiftId, renderPendingPostRequest } = useContext(AuthContext)
 
     const [ pendingPostRequest , setPendingPostRequest ] = useState (false)
     
@@ -36,22 +36,17 @@ export default function AddRecord(){
     postNewRecord()
    }
    function postNewRecord (){
-    request(
-            "POST",
-            "records/",
-            record
-            ).then((response) => {      
-                console.log("response >>>> "+ response)
-                console.log("response >>>> "+ response.data)
-                setPendingPostRequest(false)   
+      const record = postNewRecordRequest (record)
 
-            }).catch(
-            (error) => {
-                console.log("error >>>> "+ error)
-                setPendingPostRequest(false)   
-            }
-        )
-    }
+      if (record !== null ){
+        setPendingPostRequest(false)
+        // terminar de desarrollar, falta notificacion
+        // terminar de desarrollar, falta notificacion
+        // terminar de desarrollar, falta notificacion
+      } else{
+        setPendingPostRequest(false)
+      }
+  }
 
     function renderFormAddNewRecord(){
         return (

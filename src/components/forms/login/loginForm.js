@@ -1,36 +1,17 @@
 // @ts-nocheck
 import "./loginForm.css"
 
-import { useContext , useEffect, useState} from "react";
+import { useContext} from "react";
 import { AuthContext } from '../../utils/authContext';
-import {request , setAuthToken , setAuthHeader} from "../../utils/axios_helper"
 import { useForm } from 'react-hook-form';
-import { useNavigate } from "react-router-dom";
 
 export default function LoginForm ({setForm}){
-    const { setLoguedUser} = useContext(AuthContext)
+    const { loginUser} = useContext(AuthContext)
     
     const { register, formState:{errors}, handleSubmit, watch } = useForm()
-    const navigate = useNavigate()
 
     const sendForm = (data) =>{
-        request(
-            "POST" ,
-            "auth/login",                
-            { 
-                username : data.username , 
-                password : data.password
-            } )
-        .then( (resp) =>{ 
-            setAuthToken(resp.data.token)     
-            setLoguedUser(resp.data)     
-            navigate("/dashboard")  
-        })
-        .catch( (error) =>{
-            console.log(" ======== error >>>>"+error)                
-            setAuthHeader(null); 
-            setLoguedUser(false)       
-        })
+        loginUser(data.username , data.password) 
     }
 
     return(      

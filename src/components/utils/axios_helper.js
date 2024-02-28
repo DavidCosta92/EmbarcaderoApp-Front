@@ -4,28 +4,72 @@ import axios from "axios"
 axios.defaults.baseURL = 'http://localhost:8080'
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
-export const getAuthToken = () =>{
-    return window.localStorage.getItem("auth_token")
-}
-export const clearStorageAuthToken = () =>{
-    return window.localStorage.removeItem("auth_token")
+export const postNewRecordRequest = (record) =>{
+    request(
+        "POST",
+        "records/",
+        record
+        ).then((response) => {      
+            return response.data
+        }).catch(
+        (error) => {
+            console.log("error >>>> "+ error)
+            return null
+        }
+    )
 }
 
-export const setAuthHeader = (token) => {
-    if (token !== null) {
-      window.localStorage.setItem("auth_token", token);
-    } else {
-      window.localStorage.removeItem("auth_token");
-    }
-};
-export const setAuthToken = (token) =>{
-    return window.localStorage.setItem("auth_token", token)
+export const updateRecordRequest = (id, record) =>{
+    request(
+        "PATCH",
+        `records/${id}`,
+        record
+        ).then((response) => {      
+            console.log("response >>>> "+ response)
+            console.log("response >>>> "+ response.data)
+            //setPendingPostRequest(false)   
+
+        }).catch(
+        (error) => {
+            console.log("error >>>> "+ error)
+            //setPendingPostRequest(false)   
+        }
+    )
 }
+export const getRecordByIdRequest = (idRecord) =>{
+    request(
+        "GET",
+        `records/${idRecord}`,
+        {}).then(
+        (response) => {                
+            return  response.data
+        }).catch(
+        (error) => {
+            return null
+        }
+    );        
+}
+
+/*
+export const getShiftByIdRequest = (idUser)=>{      
+)
+
+}
+export const getUserDetailsRequest = (token) =>{
+}
+
+export const loginUserRequest = (usernameAtt , passwordAtt) =>{
+}
+export const registerUserRequest = (data) =>{
+}
+*/
+
 
 export const request = (method, url, data) =>{
     let headers = {}
-    if(getAuthToken() !== null && getAuthToken() !== "null"){
-        headers = { "Authorization" : `Bearer ${getAuthToken()}` }
+    const token = window.localStorage.getItem("auth_token")
+    if(token !== null && token !== "null"){
+        headers = { "Authorization" : `Bearer ${token}` }
     }
     return axios ({
         method : method,

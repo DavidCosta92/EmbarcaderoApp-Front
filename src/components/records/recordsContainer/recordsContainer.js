@@ -11,7 +11,7 @@ export default function RecordsContainer({records}){
                 <Link to="/addNewRecord" className="btn btn-success btn-lg" role="button">Nuevo registro</Link>
             </span>
 
-            <table class="table table-secondary table-striped">
+            <table className="table table-secondary table-striped">
                 <thead>
                     <tr>
                         <th scope="col">id</th>
@@ -31,7 +31,7 @@ export default function RecordsContainer({records}){
                 <tbody>
                     { records.map( (rec) => {
                         return(
-                            <Record record={rec}/>
+                            <Record record={rec} key={rec.id}/>
                         )}) }
                 </tbody>
             </table>                
