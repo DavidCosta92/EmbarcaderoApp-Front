@@ -10,6 +10,8 @@ import WelcomeContent from '../welcomeContent/WelcomeContent'
 import Navbar from '../navbar/navbar'
 import foto_user from "../../assets/pictures/profile/foto_user.jpg"
 import AuthForm from '../forms/authForm/authForm'
+import ProtectedRoute from '../utils/protectedRoute'
+import { user_role } from '../utils/userRoles'
 
 
 export default function App (){
@@ -18,23 +20,33 @@ export default function App (){
             <AuthProvider>
                 <Navbar/> 
                 <Routes>
+
+                    {/* RUTAS PUBLICAS */}
                     <Route path='/' element={ <WelcomeContent/>} />
-                    <Route path='/addNewRecord' element={<AddRecord/>} />
-                    <Route path='/dashboard' element={<AuthContent/>} />
-                    <Route path='/recordDetails/:id' element={<RecordDetails/>}/>    
-
-                    <Route path='/licenses' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}     
-                    <Route path='/persons' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}   
-
                     <Route path='/auth' element={<AuthForm/>} />
-                    <Route path='/userProfile' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}   
 
-                    
-                    
-                    {/*  
-                    <Route path='/' element={} />
-                    <Route path='/' element={} />
-                    */}
+                    {/* RUTAS AUTHENTICADOS */}
+                    <Route element={<ProtectedRoute />}> 
+                        <Route path='/dashboard' element={<AuthContent/>} />
+                        <Route path='/licenses' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}     
+                        <Route path='/persons' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}   
+                        <Route path='/userProfile' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}   
+                    </Route>
+
+                    {/* RUTAS AUTHENTICADOS && ROLES NAUTICOS  o ADMIN */}
+                    <Route element={<ProtectedRoute onlyRoles={[user_role.lifeguard,user_role.admin]} />}> 
+                        <Route path='/addNewRecord' element={<AddRecord/>} />
+                        <Route path='/recordDetails/:id' element={<RecordDetails/>}/>    
+                    </Route>
+
+                    {/* RUTAS AUTHENTICADOS && ROL OFICINA o ADMIN */}
+                    <Route element={<ProtectedRoute onlyRoles={[user_role.office,user_role.admin]} />}> 
+                        {/*  
+                        <Route path='/licences/add' element={<AddRecord/>} />
+                        <Route path='/recordDetails/:id' element={<RecordDetails/>}/>    
+                        */}
+                    </Route>
+
                 </Routes>
                 <Footer/>
             </AuthProvider>   
