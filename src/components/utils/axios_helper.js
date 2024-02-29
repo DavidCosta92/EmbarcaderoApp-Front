@@ -19,38 +19,13 @@ export const postNewRecordRequest = (record) =>{
     )
 }
 
+/*
 export const updateRecordRequest = (id, record) =>{
-    request(
-        "PATCH",
-        `records/${id}`,
-        record
-        ).then((response) => {      
-            console.log("response >>>> "+ response)
-            console.log("response >>>> "+ response.data)
-            //setPendingPostRequest(false)   
 
-        }).catch(
-        (error) => {
-            console.log("error >>>> "+ error)
-            //setPendingPostRequest(false)   
-        }
-    )
 }
 export const getRecordByIdRequest = (idRecord) =>{
-    request(
-        "GET",
-        `records/${idRecord}`,
-        {}).then(
-        (response) => {                
-            return  response.data
-        }).catch(
-        (error) => {
-            return null
-        }
-    );        
 }
 
-/*
 export const getShiftByIdRequest = (idUser)=>{      
 )
 

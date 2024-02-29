@@ -1,0 +1,6 @@
+.alertContainer{
+    position: fixed;
+    top: 7vh;
+    right: 1vw;
+    z-index: 1000;
+}

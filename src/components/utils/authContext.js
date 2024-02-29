@@ -1,8 +1,10 @@
 // @ts-nocheck
 import React, { useState , useEffect} from 'react'
-import { Box, CircularProgress, LinearProgress } from "@mui/material";
+import { Alert, Box, CircularProgress, LinearProgress } from "@mui/material";
 import { request} from './axios_helper';
 import { useNavigate } from "react-router-dom";
+import { Checklist } from '@mui/icons-material';
+import AlertTitle from '@mui/material/AlertTitle';
 
 const AuthContext = React.createContext();
 
@@ -17,6 +19,10 @@ const AuthProvider =({children})=>{
         setUserFromSessionStorage()
     }, [])
 
+    useEffect(()=>{
+        getShiftUser()
+    }, [loguedUser])
+
     function getShiftUser(){          
         request(
             "GET",
@@ -29,7 +35,7 @@ const AuthProvider =({children})=>{
             })
             .catch((error) => {
                 setShift(null)
-            })
+        })
     }
     function getAuthToken(){
         return window.localStorage.getItem("auth_token")
@@ -49,14 +55,14 @@ const AuthProvider =({children})=>{
             "GET",
             "auth/userDetails",
             {})
-            .then(
-            (response) => {                       
+            .then((response) => {                       
                 setLoguedUser(response.data)
-                setLoadingUser(false)
+                setLoadingUser(false)                
             })
             .catch((error) => {
                 console.log ("***********>>> "+error)  
-                setAuthHeader(null);              
+                setAuthHeader(null);  
+                setShift(null)            
             }
         )
     }
@@ -108,7 +114,7 @@ const AuthProvider =({children})=>{
     function renderPendingPostRequest(){
         return(
             <div className="spinner"> 
-                <Box sx={{ display: 'flex' }}  className="pendingPostRequest">
+                <Box sx={{ display: 'flex' }}  className="">
                 <div class="alert alert-success" role="alert">
                     <h4 className="alert-heading">Enviando peticion..</h4>
                     <LinearProgress color="success" />

@@ -11,7 +11,9 @@ export default function RecordsContainer({records}){
                 <Link to="/addNewRecord" className="btn btn-success btn-lg" role="button">Nuevo registro</Link>
             </span>
 
-            <table className="table table-secondary table-striped">
+            <h3  className="funcionalidadPendiente"> DEFINIR CANTIDAD DE DATOS, Y ORGANIZAR TABLA</h3>
+
+            <table className="table table-secondary table-striped ">
                 <thead>
                     <tr>
                         <th scope="col">id</th>
