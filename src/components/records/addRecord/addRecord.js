@@ -10,15 +10,33 @@ import PersonModal from "../../modals/persons/personModal.js";
 
 
 export default function AddRecord(){
-    const {renderPendingPostRequest, getShiftUser, shift } = useContext(AuthContext)
+    const {renderPendingPostRequest, getShiftUser, shift /*, personSelected */} = useContext(AuthContext)
     const {register, formState:{errors}, handleSubmit, watch, reset } = useForm()    
     const [ pendingPostRequest , setPendingPostRequest ] = useState (false)
     const [ showAlert, setShowAlert] = useState(false)
     const [ alert, setAlert] = useState()
+    const [ personSelected , setPersonSelected]  = useState()
     
     useEffect(()=>{
       getShiftUser()
     }, [])
+
+    // cuando tengo todo, reseteo datos por defecto formulario
+    useEffect(() => {
+      console.log("refrescando pantalla al guardar persona? "+personSelected?.dni)
+      if (personSelected) {
+          reset({
+            "person": personSelected.dni ,
+            //  "id": personSelected.id ,
+            //  "phone": personSelected.phone ,
+            //  "name": personSelected.name ,
+            //  "lastName": personSelected.lastName ,
+            //  "emergency_phone": personSelected.emergency_phone ,
+            //  "address": personSelected.address ,
+            //  "notes": personSelected.notes ,
+          });
+      }        
+    }, [personSelected]);
     
     function renderAlert(msg, title, style, miliseg){
       setShowAlert(true)
@@ -67,7 +85,7 @@ export default function AddRecord(){
                     <input type="checkbox" id="hasLicense" name="hasLicense" className="form-check-input" {...register("hasLicense")} />
                     <label className="form-check-label" htmlFor="hasLicense">Posee matricula</label>
                   </div>
-                  <PersonModal />
+                  <PersonModal setPersonSelected={setPersonSelected} renderAlert={renderAlert} />
                   <div className="form-floating mb-4 inputDiv">
                     <input type="number" id="person" name="person" className="form-control"  {...register("person", {required:true, maxLength:9 })}  />
                     <label className="form-label" htmlFor="person">Dni persona a cargo</label>

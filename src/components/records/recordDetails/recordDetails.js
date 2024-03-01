@@ -95,7 +95,7 @@ export default function RecordDetails (){
             (error) => {    
                 setRecord(null)
             }
-        );        
+        )     
     }   
     function changeStyleRecordState(event){
         let recordStateInput = document.getElementById("recordState")

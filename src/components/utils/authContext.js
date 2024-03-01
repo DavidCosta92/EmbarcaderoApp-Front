@@ -14,7 +14,7 @@ const AuthProvider =({children})=>{
     const [ shift, setShift ] = useState(null)
     const [ loadingShift, setLoadingShift ] = useState()
     const [ loadingUser, setLoadingUser ] = useState()
-
+    
     useEffect(()=>{
         setUserFromSessionStorage()
     }, [])
