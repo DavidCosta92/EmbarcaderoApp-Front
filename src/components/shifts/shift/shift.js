@@ -16,6 +16,8 @@ export default function Shift (){
     }, [])
 
     function renderShift (){
+        const fecha = new Date(shift?.date)
+
         if(shift){
             return(
                 <div className="actualShift">
@@ -25,7 +27,7 @@ export default function Shift (){
                             <span>
                                 <ul>
                                     <li> ID: {shift.id}</li>
-                                    <li> Fecha: {shift.date}</li>
+                                    <li> Fecha: {fecha.toLocaleDateString()}</li>
                                     <li> Estado: {shift.close === null && "Activo"}</li>
                                 </ul>    
                             </span>     

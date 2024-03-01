@@ -15,6 +15,10 @@ import { user_role } from '../utils/userRoles'
 
 
 export default function App (){
+    
+    console.log("Total Width :", window.screen.width);
+    console.log("Available Width :",window.screen.availWidth );
+
     return(
         <BrowserRouter>
             <AuthProvider>

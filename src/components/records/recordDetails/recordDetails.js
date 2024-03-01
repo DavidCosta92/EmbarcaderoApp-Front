@@ -11,10 +11,11 @@ import CustomAlert from "../../alert/customAlert.js";
 export default function RecordDetails (){
     const {loguedUser , renderSpiner,shift , renderPendingPostRequest, getShiftUser} = useContext(AuthContext)
     const {id} = useParams();
+    const {register, formState:{errors}, handleSubmit, watch , reset} = useForm()
+
     const [ pendingPostRequest , setPendingPostRequest ] = useState (false)   
-    const [loading, setLoading ] = useState(true)   
+    const [ loading, setLoading ] = useState(true)   
     const [ record , setRecord ] = useState()
-    const { register, formState:{errors}, handleSubmit, watch , reset} = useForm()
 
     
     const [showAlert, setShowAlert] = useState(false)
@@ -36,14 +37,18 @@ export default function RecordDetails (){
     // cuando tengo todo, reseteo datos por defecto formulario
     useEffect(() => {
         if (record) {
+            const format = { year: '2-digit', month:'2-digit', day:'2-digit', hour: '2-digit', minute: '2-digit' }
+            const start = new Date(record.startTime)
+            const end = new Date(record.endTime)
+
             const boat = record.boat
             const engine = boat.engine
             const person = record.person
             reset({
                 "id": id,
                 "idShift" : shift?.id,
-                "startTime": record.startTime,
-                "endTime": record.endTime,
+                "startTime": start.toLocaleString([], format),
+                "endTime": record.endTime? end.toLocaleString([], format) : "-- --",
                 "recordState": record.recordState,
                 "boat": { 
                     "id": boat.id,
@@ -71,7 +76,7 @@ export default function RecordDetails (){
                     "isUpdate" : person.isUpdate
                     },
                 "numberOfGuests": record.numberOfGuests,
-                "car": record.car,
+                "car": record.car.toUpperCase(),
                 "notes": record.notes
             });
         }
@@ -125,7 +130,6 @@ export default function RecordDetails (){
     }
     function renderDetailsForm(){
         if(pendingPostRequest === true)  return renderPendingPostRequest ()
-
         return(
             <>
             <form onSubmit={handleSubmit(updateRecord)} className="formRecordDetails">             
@@ -152,8 +156,12 @@ export default function RecordDetails (){
                         {errors.car?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                     </div>
                     <div className="form-floating mb-4 ">
+                        <input type="text" id="startTime" name="startTime" className="form-control" disabled {...register("startTime")} />
+                        <label className="form-label" htmlFor="startTime">Inicio</label>
+                    </div>   
+                    <div className="form-floating mb-4 ">
                         <input type="text" id="endTime" name="endTime" className="form-control" disabled {...register("endTime")} />
-                        <label className="form-label" htmlFor="endTime">Fecha finalizacion</label>
+                        <label className="form-label" htmlFor="endTime">Fin</label>
                     </div>   
                 </div>    
 

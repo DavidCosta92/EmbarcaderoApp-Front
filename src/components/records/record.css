@@ -1,0 +1,30 @@
+
+
+tr.record_ACTIVO td, tr.record_ACTIVO th{
+    /* background-color: rgba(0, 128, 0, 0.31);*/
+    color: rgb(0, 128, 0);
+    font-size: 1.05em;
+    font-weight: 600;
+
+}
+tr.record_DESCONOCIDO td, tr.record_DESCONOCIDO th{
+    /* background-color: rgba(255, 255, 0, 0.326);*/
+    color: rgba(255, 114, 0, 0.779);
+    font-size: 1.05em;
+    font-weight: 600;
+
+}
+tr.record_EGRESADO td, tr.record_EGRESADO th{
+    /* background-color: rgba(128, 128, 128, 0.812);*/
+    color: rgba(128, 128, 128, 0.812);
+}
+tr.record_SINIESTRADO td, tr.record_SINIESTRADO th{
+    /* background-color: rgba(255, 0, 0, 0.315);*/
+    color: rgb(255, 0, 0);
+
+}
+tr.record_ELIMINADO td, tr.record_ELIMINADO th{
+    /* background-color: rgba(0, 0, 255, 0.326);*/
+    color:  rgb(0, 0, 255);
+
+}

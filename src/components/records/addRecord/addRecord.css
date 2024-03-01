@@ -10,3 +10,7 @@
     height: 7px;
     width: 100%;
 }
+
+.addRecordForm form .inputDiv{
+    height: 80px;
+}
