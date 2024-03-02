@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { request } from "../../utils/axios_helper";
 import CustomAlert from "../../alert/customAlert";
 
-export default function PersonForm({handleClose , setPersonSelected, renderAlert}){
+export default function PersonForm({handleClose , personSelected, setPersonSelected, renderAlert}){
 
     const {loguedUser, setLoguedUser, registerUser, loadingUser, renderSpiner, renderPendingPostRequest} = useContext(AuthContext)
     
@@ -24,6 +24,12 @@ export default function PersonForm({handleClose , setPersonSelected, renderAlert
     const [ areUpdatedFiels , setAreUpdatedFiels] = useState(false)
 
 
+    useEffect(() => {
+        if(personSelected){
+            getPersonDetailsByDni(personSelected.dni)
+            setloadingPersonForm(true)
+        }
+      }, []);
 
     useEffect(() => {
         const subscription = watch((value, { name, type }) => {
@@ -34,7 +40,7 @@ export default function PersonForm({handleClose , setPersonSelected, renderAlert
 
     const sendForm = (data) =>{ 
         if(personFromDb && !areUpdatedFiels){// Si se encontro por dni, y NO hay cambio de datos, solo seteo persona en el formulario de registro
-            renderAlert("Persona elegida", "Exito", "success",2000)        
+            renderAlert("Persona elegida", "Exito", "success",4000)        
             setPersonSelected(data)
             handleClose()  
         } else{    
@@ -51,7 +57,7 @@ export default function PersonForm({handleClose , setPersonSelected, renderAlert
                 {...data} )
                 .then((response) => {        
                     if(response.status === 201){
-                        renderAlert("Persona creada", "Exito", "success",2000)
+                        renderAlert("Persona creada", "Exito", "success",4000)
                         setSendingPostRequest(false)
                         setPersonSelected(data)
                         handleClose()  
@@ -69,7 +75,7 @@ export default function PersonForm({handleClose , setPersonSelected, renderAlert
                 {...data} )
                 .then((response) => {        
                     if(response.status === 202){
-                        renderAlert("Persona actualizada", "Exito", "success",2000)
+                        renderAlert("Persona actualizada", "Exito", "success",4000)
                         setSendingPostRequest(false)
                         setPersonSelected(data)
                         handleClose()  
@@ -82,9 +88,8 @@ export default function PersonForm({handleClose , setPersonSelected, renderAlert
             ) 
         }
     }
-
     const checkDniField = (event)=>{
-        const dni = event.target.value
+        const dni = event.target.value        
         if(dni.length === 8){
             getPersonDetailsByDni(dni)
             setloadingPersonForm(true)
@@ -97,7 +102,7 @@ export default function PersonForm({handleClose , setPersonSelected, renderAlert
             "GET",
             `person/${dni}`,
             {}).then(
-            (response) => {                             
+            (response) => {                  
                 setloadingPersonForm(false)
                 setPerson(response.data)
                 setPersonFromDb(true)

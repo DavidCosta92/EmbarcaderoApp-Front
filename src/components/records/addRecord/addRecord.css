@@ -14,3 +14,25 @@
 .addRecordForm form .inputDiv{
     height: 80px;
 }
+
+.addRecordForm form .personContainer, .addRecordForm form .boatContainer{
+    border: 1px solid rgba(112, 103, 103, 0.288);
+    border-radius: 30px;
+    padding:20px 10px;
+    margin-bottom: 20px;
+}
+
+.addRecordForm form .personContainer .btnModalPerson, .addRecordForm form .boatContainer .btnModalBoat{
+    display: flex;
+    justify-content: center;
+}
+
+.addRecordForm form .personContainer .inputContainer, .addRecordForm form .boatContainer .inputContainer{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.addRecordForm form .personContainer .inputDiv, .addRecordForm form .boatContainer .inputDiv{
+    max-width: 350px;
+}

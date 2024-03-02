@@ -1,5 +1,5 @@
 // @ts-nocheck
-import "./personModal.css"
+import "./boatModal.css"
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -11,10 +11,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import RegisterForm from "../../forms/register/registerForm";
 import PersonForm from "../../forms/person/personForm";
 import { useState, useContext } from "react";
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import SailingIcon from '@mui/icons-material/Sailing';
+import BoatForm from "../../forms/boat/boatForm";
 
-
-export default function PersonModal({setPersonSelected , renderAlert, personSelected}){
+export default function BoatModal({boatSelected, setBoatSelected, renderAlert }){
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -28,18 +28,18 @@ export default function PersonModal({setPersonSelected , renderAlert, personSele
     return (
       <React.Fragment>
         <Button variant="outlined" onClick={handleClickOpen}>
-          <PersonAddAlt1Icon/>
-          {personSelected? "Editar" : "Agregar" }
+          <SailingIcon/>
+          {boatSelected? "Editar" : "Agregar" }
         </Button>
         <Dialog
           open={open}
           onClose={handleClose} >
-          <DialogTitle>Ingresa el dni de la persona a cargo</DialogTitle>
+          <DialogTitle>Embarcacion tiene matricula?</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Si los datos no son correctos debes actualizarlos!
+             SI tiene, entonces, poner matricula de embarcacion... si no tiene, agregar TIPO EMB, DETALLES
             </DialogContentText>            
-            <PersonForm handleClose={handleClose} personSelected={personSelected} setPersonSelected={setPersonSelected} renderAlert={renderAlert} />
+            <BoatForm handleClose={handleClose} boatSelected={boatSelected} setBoatSelected={setBoatSelected} renderAlert={renderAlert} />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancelar</Button>

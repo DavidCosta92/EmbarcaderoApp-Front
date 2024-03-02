@@ -7,6 +7,7 @@ import { request } from "../../utils/axios_helper.js";
 import { useForm } from 'react-hook-form';
 import CustomAlert from "../../alert/customAlert.js";
 import PersonModal from "../../modals/persons/personModal.js";
+import BoatModal from "../../modals/boat/boatModal.js";
 
 
 export default function AddRecord(){
@@ -16,6 +17,7 @@ export default function AddRecord(){
     const [ showAlert, setShowAlert] = useState(false)
     const [ alert, setAlert] = useState()
     const [ personSelected , setPersonSelected]  = useState()
+    const [ boatSelected , setBoatSelected]  = useState()
     
     useEffect(()=>{
       getShiftUser()
@@ -27,6 +29,7 @@ export default function AddRecord(){
       if (personSelected) {
           reset({
             "person": personSelected.dni ,
+            "fullName": `${personSelected.name} ${personSelected.lastName}` ,
             //  "id": personSelected.id ,
             //  "phone": personSelected.phone ,
             //  "name": personSelected.name ,
@@ -74,24 +77,56 @@ export default function AddRecord(){
     function renderFormAddNewRecord(){
         return (
             <>
-            <form onSubmit={handleSubmit(sendForm)}> 
-                  <div className="form-floating mb-4 inputDiv">
-                    <input type="text" id="boat" name="boat" className="form-control" {...register("boat", {required:true, maxLength:20 })}  />
-                    <label className="form-label" htmlFor="boat">Nombre embarcacion</label>
-                      {errors.boat?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
-                      {errors.boat?.type === "maxLength" && <p className="inputFormError">Largo maximo de 20 caracteres</p>}
+            <form onSubmit={handleSubmit(sendForm)} > 
+                  <div className="boatContainer">
+                    <h5>Embarcacion</h5>
+                    <div className="inputContainer">
+                      <div className="form-floating mb-4 inputDiv">
+                        <input type="text" id="license" name="license" className="form-control" {...register("license", {required:true, maxLength:20 })} disabled />
+                        <label className="form-label" htmlFor="license">Matricula</label>
+                      </div>
+                      <div className="form-floating mb-4 inputDiv">
+                        <input type="text" id="boat" name="boat" className="form-control" {...register("boat", {required:true, maxLength:20 })} disabled />
+                        <label className="form-label" htmlFor="boat">Nombre embarcacion</label>
+                      </div>  
+                      <div className="form-floating mb-4 inputDiv">
+                        <input type="text" id="boatType" name="boatType" className="form-control" {...register("boatType", {required:true, maxLength:20 })} disabled />
+                        <label className="form-label" htmlFor="boatType">Tipo embarcacion</label>
+                      </div>  
+                    </div>                 
+                    <span className="btnModalBoat">
+                      <BoatModal setBoatSelected={setBoatSelected} renderAlert={renderAlert} boatSelected={boatSelected} />
+                    </span>
                   </div>
+
+                  {/*          
                   <div className="form-check form-switch mb-4 inputDiv">
                     <input type="checkbox" id="hasLicense" name="hasLicense" className="form-check-input" {...register("hasLicense")} />
                     <label className="form-check-label" htmlFor="hasLicense">Posee matricula</label>
                   </div>
-                  <PersonModal setPersonSelected={setPersonSelected} renderAlert={renderAlert} />
-                  <div className="form-floating mb-4 inputDiv">
-                    <input type="number" id="person" name="person" className="form-control"  {...register("person", {required:true, maxLength:9 })}  />
-                    <label className="form-label" htmlFor="person">Dni persona a cargo</label>
-                    {errors.person?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
-                    {errors.person?.type === "maxLength" && <p className="inputFormError">Largo maximo de 9 caracteres</p>}
+                    */}
+
+
+                  <div className="personContainer">
+                    <h5>Timonel</h5>
+                    <div className="inputContainer">
+                      <div className="form-floating mb-4 inputDiv">
+                        <input type="number" id="person" name="person" className="form-control"  {...register("person", {required:true, maxLength:9 })} disabled />
+                        <label className="form-label" htmlFor="person">Dni</label>
+                        {errors.person?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
+                        {errors.person?.type === "maxLength" && <p className="inputFormError">Largo maximo de 9 caracteres</p>}
+                      </div>
+                      <div className="form-floating mb-4 inputDiv">
+                        <input type="text" id="fullName" name="fullName" className="form-control"  {...register("fullName")} disabled  />
+                        <label className="form-label" htmlFor="fullName">Nombre y apellido</label>
+                      </div>   
+                    </div>                 
+                    <span className="btnModalPerson">
+                      <PersonModal setPersonSelected={setPersonSelected} renderAlert={renderAlert} personSelected={personSelected} />
+                    </span>
                   </div>
+
+
                   <div className="form-floating mb-4 inputDiv">
                     <input type="number" id="numberOfGuests" name="numberOfGuests" className="form-control" {...register("numberOfGuests", {required:true, min:0})}  />
                     <label className="form-label" htmlFor="numberOfGuests">Cantidad invitados</label>
