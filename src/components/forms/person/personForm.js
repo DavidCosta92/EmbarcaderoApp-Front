@@ -7,17 +7,14 @@ import { useForm } from 'react-hook-form';
 import { request } from "../../utils/axios_helper";
 import CustomAlert from "../../alert/customAlert";
 
-export default function PersonForm({handleClose , personSelected, setPersonSelected, renderAlert}){
+export default function PersonForm({handleClose , person, setPerson, setFormData, setUpdatedForm,formData, renderAlert}){
 
-    const {loguedUser, setLoguedUser, registerUser, loadingUser, renderSpiner, renderPendingPostRequest} = useContext(AuthContext)
+    const { renderSpiner, renderPendingPostRequest} = useContext(AuthContext)
     
     const { register, formState:{errors}, handleSubmit, watch , reset} = useForm()
 
     const [ showPersonForm, setShowPersonForm ] = useState(false)
     const [ loadingPersonForm, setloadingPersonForm ] = useState(false)
-
-    const [ person, setPerson] = useState()
-
     const [ sendingPostRequest , setSendingPostRequest] = useState(false)
 
     const [ personFromDb , setPersonFromDb] = useState()
@@ -25,8 +22,8 @@ export default function PersonForm({handleClose , personSelected, setPersonSelec
 
 
     useEffect(() => {
-        if(personSelected){
-            getPersonDetailsByDni(personSelected.dni)
+        if(person?.dni !== undefined){
+            getPersonDetailsByDni(formData.dni)
             setloadingPersonForm(true)
         }
       }, []);
@@ -34,14 +31,21 @@ export default function PersonForm({handleClose , personSelected, setPersonSelec
     useEffect(() => {
         const subscription = watch((value, { name, type }) => {
           setAreUpdatedFiels(true)
+          console.log("modificando form??'")
+          console.log(" UpdatedFiels "+areUpdatedFiels)
         });
         return () => subscription.unsubscribe(); // función de limpieza que se ejecuta cuando el componente se desmonta o antes de que el efecto se ejecute nuevamente
       }, [watch]);
 
     const sendForm = (data) =>{ 
         if(personFromDb && !areUpdatedFiels){// Si se encontro por dni, y NO hay cambio de datos, solo seteo persona en el formulario de registro
-            renderAlert("Persona elegida", "Exito", "success",4000)        
-            setPersonSelected(data)
+            renderAlert("Persona elegida", "Exito", "success",4000)     
+            // formData.person = data.dni 
+            // formData.name = data.name 
+            // formData.lastName = data.lastName 
+            // setFormData(formData)
+            setPerson(data)
+            setUpdatedForm(true)
             handleClose()  
         } else{    
             setSendingPostRequest(true)  
@@ -58,8 +62,17 @@ export default function PersonForm({handleClose , personSelected, setPersonSelec
                 .then((response) => {        
                     if(response.status === 201){
                         renderAlert("Persona creada", "Exito", "success",4000)
-                        setSendingPostRequest(false)
-                        setPersonSelected(data)
+                        setSendingPostRequest(false)     
+                        //formData.person = data.dni 
+                        //formData.phone = data.phone 
+                        //formData.name = data.name 
+                        // formData.lastName = data.lastName 
+                        // formData.emergency_phone = data.emergency_phone 
+                        // formData.address = data.address 
+                        // formData.personNotes = data.personNotes
+                        // setFormData(formData)
+                        setPerson(data)
+                        setUpdatedForm(true)
                         handleClose()  
                     }
                 })
@@ -68,7 +81,7 @@ export default function PersonForm({handleClose , personSelected, setPersonSelec
                     renderAlert(`${error.response.status} : ${error.response.data.message}`, "Error", "error", 4000)
                 }
             ) 
-        } else if(personFromDb && areUpdatedFiels){ // Si se encontro por dni, y hay cambio de datos, actualizar persona
+        } else if(personFromDb && areUpdatedFiels){ // Si se encontro por dni, y hay cambio de datos, actualizar persona            
             request(
                 "PUT",
                 `person/`,
@@ -76,8 +89,17 @@ export default function PersonForm({handleClose , personSelected, setPersonSelec
                 .then((response) => {        
                     if(response.status === 202){
                         renderAlert("Persona actualizada", "Exito", "success",4000)
-                        setSendingPostRequest(false)
-                        setPersonSelected(data)
+                        setSendingPostRequest(false)  
+                        // formData.person = data.dni 
+                        // formData.phone = data.phone 
+                        // formData.name = data.name 
+                        // formData.lastName = data.lastName 
+                        // formData.emergency_phone = data.emergency_phone 
+                        // formData.address = data.address 
+                        // formData.personNotes = data.personNotes
+                        // setFormData(formData)
+                        setPerson(data)
+                        setUpdatedForm(true)
                         handleClose()  
                     }
                 })
@@ -136,7 +158,7 @@ export default function PersonForm({handleClose , personSelected, setPersonSelec
                 "lastName": person.lastName ,
                 "emergency_phone": person.emergency_phone ,
                 "address": person.address ,
-                "notes": person.notes ,
+                "personNotes": person.personNotes ,
             });
             setShowPersonForm(true) 
         }        
@@ -162,38 +184,38 @@ export default function PersonForm({handleClose , personSelected, setPersonSelec
                                 <>                                                                
                                     <div className="form-outline mb-4 inputDiv">
                                         <label className="form-label" htmlFor="name">Nombre</label>
-                                        <input type="text" id="name" name="name" className="form-control" {...register("name", {required:true})} />
+                                        <input type="text" id="name" name="name" className="form-control" {...register("name")} />
                                         {errors.name?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                                     </div>           
                                     
                                     <div className="form-outline mb-4 inputDiv">
                                         <label className="form-label" htmlFor="lastName">Apellido</label>
-                                        <input type="text" id="lastName" name="lastName" className="form-control" {...register("lastName", {required:true})} />
+                                        <input type="text" id="lastName" name="lastName" className="form-control" {...register("lastName")} />
                                     {errors.lastName?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                                     </div>
                     
                                     <div className="form-outline mb-4 inputDiv">
                                         <label className="form-label" htmlFor="phone">Telefono</label>
-                                        <input type="text" id="phone" name="phone" className="form-control" {...register("phone", {required:true})} />
+                                        <input type="tel" id="phone" name="phone" className="form-control" {...register("phone")} />
                                         {errors.emergency_phone?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                                     </div>      
                                                             
                                     <div className="form-outline mb-4 inputDiv">
                                         <label className="form-label" htmlFor="emergency_phone">Telefono emergencia</label>
-                                        <input type="text" id="emergency_phone" name="emergency_phone" className="form-control" {...register("emergency_phone", {required:true})} />
+                                        <input type="tel" id="emergency_phone" name="emergency_phone" className="form-control" {...register("emergency_phone")} />
                                         {errors.emergency_phone?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                                     </div>                              
                                     
                                     <div className="form-outline mb-4 inputDiv">
                                     <label className="form-label" htmlFor="address">Direccion</label>
-                                        <input type="text" id="address" name="address" className="form-control" {...register("address", {required:true})} />
+                                        <input type="text" id="address" name="address" className="form-control" {...register("address")} />
                                         {errors.address?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                                     </div>
                                     
                                     
                                     <div className="form-outline mb-4 inputDiv">
                                     <label className="form-label" htmlFor="notes">Notas</label>
-                                        <input type="text" id="notes" name="notes" className="form-control" {...register("notes", {required:true})} />
+                                        <input type="text" id="notes" name="notes" className="form-control" {...register("notes")} />
                                         {errors.notes?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                                     </div>
                                     <button type="submit"  className="btn btn-primary btn-block mb-4">Guardar</button>

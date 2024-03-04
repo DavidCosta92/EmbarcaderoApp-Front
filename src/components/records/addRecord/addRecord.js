@@ -12,34 +12,96 @@ import BoatModal from "../../modals/boat/boatModal.js";
 
 export default function AddRecord(){
     const {renderPendingPostRequest, getShiftUser, shift /*, personSelected */} = useContext(AuthContext)
-    const {register, formState:{errors}, handleSubmit, watch, reset } = useForm()    
+    const {register, formState:{errors}, handleSubmit, watch, reset } = useForm()   
+
     const [ pendingPostRequest , setPendingPostRequest ] = useState (false)
     const [ showAlert, setShowAlert] = useState(false)
     const [ alert, setAlert] = useState()
-    const [ personSelected , setPersonSelected]  = useState()
-    const [ boatSelected , setBoatSelected]  = useState()
+    const [ updatedForm, setUpdatedForm] = useState()
+    const [ formData, setFormData ] = useState({} /*{
+                                        "idShift" :"" ,
+                                        "boat" : "",                                              
+                                        "person": "",
+                                        "numberOfGuests" : "",
+                                        "car" : "",
+                                        "notes" : "",
+                                        "hasLicense" : "",
+                                        "fullName": "" , // dato extra                                              
+                                        "boatType" : "" // dato extra
+                                      }*/ )
+
+    const [ boat, setBoat ] = useState()
+    const [ person, setPerson ] = useState()
     
     useEffect(()=>{
       getShiftUser()
     }, [])
 
+        /*
+    useEffect(()=>{      
+      reset({
+      "idShift" : shift?.id ,
+      "boat" :  boat && ( boat?.boatNotes && `Supuest nombre de ${boat.boatNotes}`),                                        
+      "person": person?.dni,
+      "numberOfGuests" : "",
+      "car" : "",
+      "notes" : "",
+      "hasLicense" : "",
+      "license" :  boat && (boat?.license ? "Tiene licencia.." : " No tiene licencia.."),  
+      "fullName": person?.name && `Supuest fullname de ${person.name}` ,// dato extra                                              
+      "boatType" :boat?.typeBoat_enum // dato extra,            
+    })
+    }, [shift])
+            
+    useEffect(()=>{      
+      reset({
+        "idShift" : shift?.id ,
+        "boat" :  boat && ( boat?.boatNotes && `Supuest nombre de ${boat.boatNotes}`),                                         
+        "person": person?.dni,
+        "numberOfGuests" : "",
+        "car" : "",
+        "notes" : "",
+        "hasLicense" : "",
+        "license" :  boat && (boat?.license ? "Tiene licencia.." : " No tiene licencia.."),  
+        "fullName": person?.name && `Supuest fullname de ${person.name}` ,// dato extra                                              
+        "boatType" :boat?.typeBoat_enum // dato extra,               
+    })
+    }, [boat])  
+*/
+    useEffect(()=>{      
+      console.log("Use efecto por setUpdatedForm => ")
+      reset({
+        "idShift" : shift?.id ,
+        "boat" :  boat && ( boat?.boatNotes && `Supuest nombre de ${boat.boatNotes}`),                                        
+        "person": person?.dni,
+        "numberOfGuests" : "",
+        "car" : "",
+        "notes" : "",
+        "hasLicense" : "",
+        "license" :  boat && (boat?.license ? "Tiene licencia.." : " No tiene licencia.."),  
+        "fullName": person?.name && `Supuest fullname de ${person.name}` ,// dato extra                                              
+        "boatType" :boat?.typeBoat_enum // dato extra,             
+    })
+    setUpdatedForm(false)
+  }, [updatedForm])
+
     // cuando tengo todo, reseteo datos por defecto formulario
     useEffect(() => {
-      console.log("refrescando pantalla al guardar persona? "+personSelected?.dni)
-      if (personSelected) {
-          reset({
-            "person": personSelected.dni ,
-            "fullName": `${personSelected.name} ${personSelected.lastName}` ,
-            //  "id": personSelected.id ,
-            //  "phone": personSelected.phone ,
-            //  "name": personSelected.name ,
-            //  "lastName": personSelected.lastName ,
-            //  "emergency_phone": personSelected.emergency_phone ,
-            //  "address": personSelected.address ,
-            //  "notes": personSelected.notes ,
-          });
-      }        
-    }, [personSelected]);
+      reset({
+        "idShift" : shift?.id ,
+        "boat" :  boat && ( boat?.boatNotes && `Supuest nombre de ${boat.boatNotes}`),     
+        "person": person?.dni,
+        "numberOfGuests" : "",
+        "car" : "",
+        "notes" : "",
+        "hasLicense" : "",
+        "license" :  boat && (boat?.license ? "Tiene licencia.." : " No tiene licencia.."),                                         
+        "fullName": person?.name && `Supuest fullname de ${person.name}` ,// dato extra                                              
+        "boatType" :boat?.typeBoat_enum // dato extra,                 
+      })
+      setUpdatedForm(false)
+        
+    }, [updatedForm]);
     
     function renderAlert(msg, title, style, miliseg){
       setShowAlert(true)
@@ -48,14 +110,35 @@ export default function AddRecord(){
           setShowAlert(false);
       }, miliseg);
     }
+
+    /*
+    ERROR BACKEND 400: Cannot invoke "com.Embarcadero.demo.model.dtos.engine.EngineReadDto.getEngineNumber()" because the return value of "com.Embarcadero.demo.model.dtos.boat.BoatReadDto.getEngine()" is null - Cod: 6
+    */
+
     const sendForm = (data) =>{
-      data.idShift = shift.id
-      data.car = data.car.toUpperCase()
+      console.log("----->>>>>>>>>>>> enviando fomr-----INFO QUE DEBERIA ENVIAR A BACK---------------")
+      console.log("shift?.id " , shift?.id)
+      console.log("boat?.name " , boat?.name)
+      console.log("person " , person?.dni)
+      console.log("data.numberOfGuests.value" ,data.numberOfGuests)
+      console.log("data.car" , data.car)
+      console.log("data.notes" , data.notes)
+      console.log("boat?.hasLicense " , boat?.hasLicense)      
+      console.log("-----------------------------")
+      // TRANSFORMO INFO ANTES DE ENVIAR A BACK
+      formData.idShift = shift?.id
+      formData.boat = boat?.name == undefined && "duppper" // HARDCODDEADO PARA QUE NO FALLE BACK... LUEGO MODIFICAR PARA QUE SEA REAL..
+      formData.person = person?.dni
+      formData.numberOfGuests = data.numberOfGuests
+      formData.car = data.car.toUpperCase()
+      formData.notes = data.notes
+      formData.hasLicense = true // boat?.hasLicense VA TRUE PARA QUE NO FALLE BACK... LUEGO MODIFICAR PARA QUE SEA REAL..
+      
       setPendingPostRequest(true)
       request(
           "POST",
           "records/",
-          data)
+          formData)
           .then((response) => {      
             setPendingPostRequest(false)
             if(response.status ===201){
@@ -74,28 +157,30 @@ export default function AddRecord(){
           }
       )
     }
+
     function renderFormAddNewRecord(){
         return (
             <>
-            <form onSubmit={handleSubmit(sendForm)} > 
+            <form onSubmit={handleSubmit(sendForm)} >  
                   <div className="boatContainer">
                     <h5>Embarcacion</h5>
                     <div className="inputContainer">
                       <div className="form-floating mb-4 inputDiv">
-                        <input type="text" id="license" name="license" className="form-control" {...register("license", {required:true, maxLength:20 })} disabled />
+                        <input type="text" id="license" name="license" className="form-control" {...register("license")} disabled />
                         <label className="form-label" htmlFor="license">Matricula</label>
                       </div>
                       <div className="form-floating mb-4 inputDiv">
-                        <input type="text" id="boat" name="boat" className="form-control" {...register("boat", {required:true, maxLength:20 })} disabled />
+                        <input type="text" id="boat" name="boat" className="form-control" {...register("boat")} disabled />
                         <label className="form-label" htmlFor="boat">Nombre embarcacion</label>
                       </div>  
                       <div className="form-floating mb-4 inputDiv">
-                        <input type="text" id="boatType" name="boatType" className="form-control" {...register("boatType", {required:true, maxLength:20 })} disabled />
+                        <input type="text" id="boatType" name="boatType" className="form-control" {...register("boatType")} disabled />
                         <label className="form-label" htmlFor="boatType">Tipo embarcacion</label>
+                        {errors.boatType?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                       </div>  
                     </div>                 
-                    <span className="btnModalBoat">
-                      <BoatModal setBoatSelected={setBoatSelected} renderAlert={renderAlert} boatSelected={boatSelected} />
+                    <span className="btnModalBoat">                      
+                      <BoatModal boat={boat} setBoat={setBoat} setFormData={setFormData} setUpdatedForm={setUpdatedForm} formData={formData} renderAlert={renderAlert}/>                    
                     </span>
                   </div>
 
@@ -111,10 +196,9 @@ export default function AddRecord(){
                     <h5>Timonel</h5>
                     <div className="inputContainer">
                       <div className="form-floating mb-4 inputDiv">
-                        <input type="number" id="person" name="person" className="form-control"  {...register("person", {required:true, maxLength:9 })} disabled />
+                        <input type="number" id="person" name="person" className="form-control"  {...register("person")} disabled />
                         <label className="form-label" htmlFor="person">Dni</label>
                         {errors.person?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
-                        {errors.person?.type === "maxLength" && <p className="inputFormError">Largo maximo de 9 caracteres</p>}
                       </div>
                       <div className="form-floating mb-4 inputDiv">
                         <input type="text" id="fullName" name="fullName" className="form-control"  {...register("fullName")} disabled  />
@@ -122,7 +206,7 @@ export default function AddRecord(){
                       </div>   
                     </div>                 
                     <span className="btnModalPerson">
-                      <PersonModal setPersonSelected={setPersonSelected} renderAlert={renderAlert} personSelected={personSelected} />
+                      <PersonModal  person={person} setPerson={setPerson} setFormData={setFormData} setUpdatedForm={setUpdatedForm} formData={formData} renderAlert={renderAlert} />
                     </span>
                   </div>
 
@@ -145,7 +229,7 @@ export default function AddRecord(){
                     {errors.notes?.type === "maxLength" && <p className="inputFormError">Largo maximo de 255 caracteres</p>}
                   </div>
                  
-                  <button type="submit" className="btn btn-success btn-lg btn-block mb-3">Agregar registro</button>
+                  <button type="submit" className="btn btn-success btn-lg btn-block mb-3" onClick={()=> console.log("hice click en btn agregar registro")}>Agregar registro</button>
             </form>
             </>
         )

@@ -7,25 +7,30 @@ import { useForm } from 'react-hook-form';
 import { request } from "../../utils/axios_helper";
 import CustomAlert from "../../alert/customAlert";
 
-export default function BoatForm ({handleClose , personSelected, setPersonSelected, renderAlert}){
+export default function BoatForm ({boat, setBoat, handleClose, renderAlert, formData, setFormData, setUpdatedForm}){
 
-    const {loguedUser, setLoguedUser, registerUser, loadingUser, renderSpiner, renderPendingPostRequest} = useContext(AuthContext)
+    const { renderSpiner, renderPendingPostRequest} = useContext(AuthContext)
     
     const { register, formState:{errors}, handleSubmit, watch , reset} = useForm()
 
     const [ showBoatForm, setShowBoatForm ] = useState(false)
     const [ loadingBoatForm, setloadingBoatForm ] = useState(false)
 
-    const [ boat, setBoat] = useState()
-
     const [ sendingPostRequest , setSendingPostRequest] = useState(false)
 
-    const [ boatFromDb , setBoatFromDb] = useState()
+    // const [ boatFromDb , setBoatFromDb] = useState()
     // const [ areUpdatedFiels , setAreUpdatedFiels] = useState(false)
 
 
 
-    const sendForm = (data) =>{ 
+    const sendForm = (data) =>{     
+        renderAlert("Embarcacion elegida", "Exito", "success",4000)          
+        
+        setBoat (data)
+
+        // setFormData(formData)
+        setUpdatedForm(true)
+        handleClose()  
 /*
         if(personFromDb && !areUpdatedFiels){// Si se encontro por dni, y NO hay cambio de datos, solo seteo persona en el formulario de registro
             renderAlert("Persona elegida", "Exito", "success",4000)        
@@ -38,14 +43,9 @@ export default function BoatForm ({handleClose , personSelected, setPersonSelect
 */
     }
 
-    const checkLicenseField = (event)=>{
-        if(event.target.value === "on"){
-            setShowBoatForm(true)
-        }else{            
-            setShowBoatForm(false)
-        }
+    const checkLicenseField = (event)=>{                
+        setShowBoatForm(event.target.checked)
     }
-
 
     const renderBoatForm = ()=>{
         return(   
@@ -64,18 +64,18 @@ export default function BoatForm ({handleClose , personSelected, setPersonSelect
 
                             { loadingBoatForm && renderSpiner()}
                             { sendingPostRequest && renderPendingPostRequest()}
-                            {showBoatForm && (
+                            { showBoatForm && (
                                 <>                                                                
                                     <div className="form-outline mb-4 inputDiv">
                                         <label className="form-label" htmlFor="license">Matricula</label>
-                                        <input type="text" id="license" name="license" className="form-control" {...register("license", {required:true})} />
+                                        <input type="text" id="license" name="license" className="form-control" {...register("license")} />
                                         {errors.license?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                                     </div>                                          
 
                                     <button type="submit"  className="btn btn-primary btn-block mb-4">Guardar</button>
                                 </>                                
                             )}   
-                            {!showBoatForm && (
+                            { !showBoatForm && (
                                 <>                                                                
                                     <div className="form-outline mb-4 inputDiv">
                                         <label  htmlFor="typeBoat_enum">Tipo de embarcacion</label>
@@ -87,9 +87,9 @@ export default function BoatForm ({handleClose , personSelected, setPersonSelect
                                         </select>
                                     </div>                                                          
                                     <div className="form-outline mb-4 inputDiv">
-                                        <label className="form-label" htmlFor="notes">Notas</label>
-                                        <textarea type="text" id="notes" name="notes" className="form-control" {...register("notes", {required:true})} />
-                                        {errors.notes?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
+                                        <label className="form-label" htmlFor="boatNotes">Notas</label>
+                                        <textarea type="text" id="boatNotes" name="boatNotes" className="form-control" {...register("boatNotes")} />
+                                        {errors.boatNotes?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                                     </div>                                        
 
                                     <button type="submit"  className="btn btn-primary btn-block mb-4">Guardar</button>

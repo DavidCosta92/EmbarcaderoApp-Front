@@ -14,7 +14,7 @@ import { useState, useContext } from "react";
 import SailingIcon from '@mui/icons-material/Sailing';
 import BoatForm from "../../forms/boat/boatForm";
 
-export default function BoatModal({boatSelected, setBoatSelected, renderAlert }){
+export default function BoatModal({boat, setBoat, renderAlert, setFormData, formData, setUpdatedForm }){
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -29,7 +29,7 @@ export default function BoatModal({boatSelected, setBoatSelected, renderAlert })
       <React.Fragment>
         <Button variant="outlined" onClick={handleClickOpen}>
           <SailingIcon/>
-          {boatSelected? "Editar" : "Agregar" }
+          Editar boton condicional {/* formData.name? "Editar" : "Agregar" */ }
         </Button>
         <Dialog
           open={open}
@@ -39,7 +39,7 @@ export default function BoatModal({boatSelected, setBoatSelected, renderAlert })
             <DialogContentText>
              SI tiene, entonces, poner matricula de embarcacion... si no tiene, agregar TIPO EMB, DETALLES
             </DialogContentText>            
-            <BoatForm handleClose={handleClose} boatSelected={boatSelected} setBoatSelected={setBoatSelected} renderAlert={renderAlert} />
+            <BoatForm boat={boat} setBoat={setBoat} handleClose={handleClose} formData={formData} setUpdatedForm={setUpdatedForm} setFormData={setFormData} renderAlert={renderAlert} />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancelar</Button>

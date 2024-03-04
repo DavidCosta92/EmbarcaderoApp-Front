@@ -14,7 +14,7 @@ import { useState, useContext } from "react";
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 
 
-export default function PersonModal({setPersonSelected , renderAlert, personSelected}){
+export default function PersonModal({ person,setPerson, setFormData, setUpdatedForm,formData, renderAlert}){
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -29,7 +29,7 @@ export default function PersonModal({setPersonSelected , renderAlert, personSele
       <React.Fragment>
         <Button variant="outlined" onClick={handleClickOpen}>
           <PersonAddAlt1Icon/>
-          {personSelected? "Editar" : "Agregar" }
+          'personSelected? "Editar" : "Agregar" '
         </Button>
         <Dialog
           open={open}
@@ -39,7 +39,7 @@ export default function PersonModal({setPersonSelected , renderAlert, personSele
             <DialogContentText>
               Si los datos no son correctos debes actualizarlos!
             </DialogContentText>            
-            <PersonForm handleClose={handleClose} personSelected={personSelected} setPersonSelected={setPersonSelected} renderAlert={renderAlert} />
+            <PersonForm person={person} setPerson={setPerson} handleClose={handleClose} setFormData={setFormData} setUpdatedForm={setUpdatedForm} formData={formData}  renderAlert={renderAlert} />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancelar</Button>
