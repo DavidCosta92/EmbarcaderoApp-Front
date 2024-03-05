@@ -19,8 +19,8 @@ export default function Record ({record}){
             <td>{start.toLocaleTimeString([], format)}</td>
             <td>{record.endTime? end.toLocaleTimeString([], format) : "-- --"}</td>
             <td>{record.recordState.toLowerCase()}</td>      
-            <td>{ record.simpleBoat? record.simpleBoat.typeSimpleBoat_enum : record.license.registeredBoat.typeLicencedBoat_enum +"HARD LICEEEEE DEBERIA IR MATRICULA Y TIPO DE EMBAR"}</td>      
-            <td>{ record.simpleBoat? record.simpleBoat.details : record.license.registeredBoat.details+"HARD LICEEEEE " }</td>                   
+            <td>{ record.simpleBoat? record.simpleBoat.typeSimpleBoat_enum : record.license.registeredBoat.typeLicencedBoat_enum }</td>      
+            <td>{ record.simpleBoat? record.simpleBoat.details : record.license.registeredBoat.details }</td>                   
             <td>{record.person.lastName} {record.person.name}</td>
             <td>{record.person.phone} - {record.person.emergency_phone}</td>
             <td>{record.numberOfGuests}</td>
