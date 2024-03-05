@@ -11,24 +11,14 @@ import BoatModal from "../../modals/boat/boatModal.js";
 
 
 export default function AddRecord(){
-    const {renderPendingPostRequest, getShiftUser, shift /*, personSelected */} = useContext(AuthContext)
+    const {renderPendingPostRequest, getShiftUser, shift} = useContext(AuthContext)
     const {register, formState:{errors}, handleSubmit, watch, reset } = useForm()   
 
     const [ pendingPostRequest , setPendingPostRequest ] = useState (false)
     const [ showAlert, setShowAlert] = useState(false)
     const [ alert, setAlert] = useState()
     const [ updatedForm, setUpdatedForm] = useState()
-    const [ formData, setFormData ] = useState({} /*{
-                                        "idShift" :"" ,
-                                        "boat" : "",                                              
-                                        "person": "",
-                                        "numberOfGuests" : "",
-                                        "car" : "",
-                                        "notes" : "",
-                                        "hasLicense" : "",
-                                        "fullName": "" , // dato extra                                              
-                                        "boatType" : "" // dato extra
-                                      }*/ )
+    const [ formData, setFormData ] = useState({})
 
     const [ boat, setBoat ] = useState()
     const [ person, setPerson ] = useState()
@@ -37,39 +27,8 @@ export default function AddRecord(){
       getShiftUser()
     }, [])
 
-        /*
     useEffect(()=>{      
-      reset({
-      "idShift" : shift?.id ,
-      "boat" :  boat && ( boat?.boatNotes && `Supuest nombre de ${boat.boatNotes}`),                                        
-      "person": person?.dni,
-      "numberOfGuests" : "",
-      "car" : "",
-      "notes" : "",
-      "hasLicense" : "",
-      "license" :  boat && (boat?.license ? "Tiene licencia.." : " No tiene licencia.."),  
-      "fullName": person?.name && `Supuest fullname de ${person.name}` ,// dato extra                                              
-      "boatType" :boat?.typeBoat_enum // dato extra,            
-    })
-    }, [shift])
-            
-    useEffect(()=>{      
-      reset({
-        "idShift" : shift?.id ,
-        "boat" :  boat && ( boat?.boatNotes && `Supuest nombre de ${boat.boatNotes}`),                                         
-        "person": person?.dni,
-        "numberOfGuests" : "",
-        "car" : "",
-        "notes" : "",
-        "hasLicense" : "",
-        "license" :  boat && (boat?.license ? "Tiene licencia.." : " No tiene licencia.."),  
-        "fullName": person?.name && `Supuest fullname de ${person.name}` ,// dato extra                                              
-        "boatType" :boat?.typeBoat_enum // dato extra,               
-    })
-    }, [boat])  
-*/
-    useEffect(()=>{      
-      console.log("Use efecto por setUpdatedForm => ")
+      console.log("Use efecto por setUpdatedForm >>>>> ")
       reset({
         "idShift" : shift?.id ,
         "boat" :  boat && ( boat?.boatNotes && `Supuest nombre de ${boat.boatNotes}`),                                        
@@ -84,6 +43,22 @@ export default function AddRecord(){
     })
     setUpdatedForm(false)
   }, [updatedForm])
+
+    /*
+
+    **********************************************************************************************************
+
+    DISEÑAR LOGICA PARA EMBARCACIONES CON O SIN MATRICULAS, 
+    SEGUN ESO MODIFICAR BACK PARA QUE MANEJE 
+    EMB CON MATRICULA Y MOTOR
+    EMB CON MATRICULA Y SIN MOTOR
+    EMB SIN MATRICULA
+
+    Y AL ULTIMO EDITAR MODAL DE EMB PARA QUE FUNCIONE DE ACUERDO A ESO...
+
+    **********************************************************************************************************
+  */
+
 
     // cuando tengo todo, reseteo datos por defecto formulario
     useEffect(() => {
@@ -110,10 +85,6 @@ export default function AddRecord(){
           setShowAlert(false);
       }, miliseg);
     }
-
-    /*
-    ERROR BACKEND 400: Cannot invoke "com.Embarcadero.demo.model.dtos.engine.EngineReadDto.getEngineNumber()" because the return value of "com.Embarcadero.demo.model.dtos.boat.BoatReadDto.getEngine()" is null - Cod: 6
-    */
 
     const sendForm = (data) =>{
       console.log("----->>>>>>>>>>>> enviando fomr-----INFO QUE DEBERIA ENVIAR A BACK---------------")

@@ -21,7 +21,7 @@ export default function RecordsContainer({records}){
                         <th scope="col">Fin</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Tipo Emb</th>
-                        <th scope="col">Nombre Emb</th>
+                        <th scope="col">Detalles Emb</th>
                         <th scope="col">Persona</th>
                         <th scope="col">Telefono</th>
                         <th scope="col">Invitados</th>
