@@ -1,6 +1,5 @@
 // @ts-nocheck
-
-import "./personModal.css"
+import "./boatFormModal.css"
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -12,11 +11,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import RegisterForm from "../../forms/register/registerForm";
 import PersonForm from "../../forms/person/personForm";
 import { useState, useContext } from "react";
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
-import PersonFormRegister from "../../forms/person/personFormRegister";
+import SailingIcon from '@mui/icons-material/Sailing';
+import BoatForm from "../../forms/boat/boatForm";
 
-export default function PersonFormModal ({personSelected , renderAlert}){
-  
+export default function BoatFormModal ({boatSelected, renderAlert}){
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -30,18 +28,18 @@ export default function PersonFormModal ({personSelected , renderAlert}){
     return (
       <React.Fragment>
         <Button variant="outlined" onClick={handleClickOpen}>
-          <PersonAddAlt1Icon/>
-          {personSelected ?  "Editar" : "Agregar"}
+          <SailingIcon/>
+          {boatSelected ?  "Editar" : "Agregar"}
         </Button>
         <Dialog
           open={open}
           onClose={handleClose} >
-          <DialogTitle>Ingresa el dni de la persona</DialogTitle>
+          <DialogTitle>Embarcacion tiene matricula?</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Si los datos no son correctos debes actualizarlos!
+             SI tiene, entonces, poner matricula de embarcacion... si no tiene, agregar TIPO EMB, DETALLES
             </DialogContentText>            
-            <PersonFormRegister  renderAlert={renderAlert}  handleClose={handleClose} />
+            <BoatForm renderAlert={renderAlert}  handleClose={handleClose} />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancelar</Button>
@@ -49,4 +47,4 @@ export default function PersonFormModal ({personSelected , renderAlert}){
         </Dialog>
       </React.Fragment>
     );
-}
+  }

@@ -6,7 +6,7 @@ import { AuthContext } from "../../utils/authContext";
 import { useForm, useFormState } from 'react-hook-form';
 import { request } from "../../utils/axios_helper";
 import CustomAlert from "../../alert/customAlert";
-import { RecordFormContext, useRecordFormContext } from "../../../providers/recordFormProvider";
+import { RecordFormContext } from "../../../providers/recordFormProvider";
 
 export default function PersonFormRegister({personBd , setPersonBd , setPersonHasUpdates, renderAlert, handleClose}){
 
@@ -14,7 +14,6 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
     const [ loadingPersonForm, setloadingPersonForm ] = useState(false)
     const [ sendingPostRequest , setSendingPostRequest] = useState(false)
     const [ showPersonForm, setShowPersonForm ] = useState(false) // MUESTRA FORMULARIO COMPLETO
-    const [ personAlreadyExistBd, setPersonAlreadyExistBd] = useState(false) // si persona existia previamente en la base de datos
     const [ personToShowFromDb, setPersonToShowFromDb] = useState() // si persona existia previamente en la base de datos, la info se guarda en este estado para mostrar el formulario
 
 
@@ -23,15 +22,25 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
     const { dirtyFields } = useFormState({ control });
 
 
-    const {record , setRecord , person , setPerson } =  useContext(RecordFormContext)
+    const {record , setRecord } =  useContext(RecordFormContext)
 
 
     const sendForm = (data) =>{
         if (isValid) {
+            const formHasChanges = Object.keys(dirtyFields).length >0
             let recordUpd = {...record}
             recordUpd.person = data
+            recordUpd.person.isUpdate = formHasChanges
+
+            if(formHasChanges){ // si se crea nuevo formulario, o si se modifico la persona que existia debo pegarle al backedn!
+                // aca deberia llamar a guardar persona, si es que viene con datos nuevos, o si es para actualizar datos!
+                // aca deberia llamar a guardar persona, si es que viene con datos nuevos, o si es para actualizar datos!
+                // aca deberia llamar a guardar persona, si es que viene con datos nuevos, o si es para actualizar datos!
+                // aca deberia llamar a guardar persona, si es que viene con datos nuevos, o si es para actualizar datos!
+                // aca deberia llamar a guardar persona, si es que viene con datos nuevos, o si es para actualizar datos!
+            }
             setRecord(recordUpd)
-            console.log("PERSONA SETEADA EN RECORD "+data.dni)
+            renderAlert("Persona elegida", "Exito", "success",4000)          
             handleClose()
         }
     }
@@ -72,7 +81,6 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
             (response) => {                  
                 setloadingPersonForm(false)
                 setPersonToShowFromDb(response.data)
-                setPersonAlreadyExistBd(true)
             })
             .catch((error) => {    
                 if(error.response?.status == 404){
@@ -88,12 +96,10 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
                     })
                 }
                 setloadingPersonForm(false)
-                setPersonAlreadyExistBd(false)
             }
         ) 
     }
-    // cuando tengo personToShowFromDb, reseteo datos por defecto formulario, con datos de la bd, si existen y sino en blanco
-    
+    // cuando tengo personToShowFromDb, reseteo datos por defecto formulario, con datos de la bd..    
     useEffect(() => {
         if (personToShowFromDb) {
             reset({
@@ -107,7 +113,7 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
                 "notes": personToShowFromDb.notes ,
             });
             setShowPersonForm(true) 
-        }        
+        }   
     }, [personToShowFromDb]);
 
     const renderPersonForm = ()=>{

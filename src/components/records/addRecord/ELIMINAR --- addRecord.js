@@ -2,7 +2,7 @@
 import "./addRecord.css"
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../utils/authContext";
+import { AuthContext } from "../../utils/authContext.js";
 import { request } from "../../utils/axios_helper.js";
 import { useForm } from 'react-hook-form';
 import CustomAlert from "../../alert/customAlert.js";

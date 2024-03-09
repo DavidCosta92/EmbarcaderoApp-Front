@@ -443,11 +443,11 @@ export default function RecordDetails (){
         if(pendingPostRequest === true)  return renderPendingPostRequest ()
         return(
             <form onSubmit={handleSubmit(updateRecord)} className="formRecordDetails">   
-                {renderSectionRecordDetails() /* RECORD details header */}                         
+                { renderSectionRecordDetails() /* RECORD details header */}                         
                 { renderSectionPersonForm() /* PERSON details  */}
-                {record?.license &&  renderSectionRegisteredBoatForm() /* BOAT with license */}                
-                {record?.simpleBoat && renderSectionSimpleBoatForm() /* SIMPLE BOAT without license */}  
-                {(isDirty || changedRecordState )&& <button type="submit" className="btn btn-outline-danger btn-lg funcionalidadPendiente">Editar registro</button>}                
+                { record?.license &&  renderSectionRegisteredBoatForm() /* BOAT with license */}                
+                { record?.simpleBoat && renderSectionSimpleBoatForm() /* SIMPLE BOAT without license */}  
+                { (isDirty || changedRecordState )&& <button type="submit" className="btn btn-outline-danger btn-lg funcionalidadPendiente">Editar registro</button>}                
             </form>
         )
     }

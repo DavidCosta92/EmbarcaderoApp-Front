@@ -1,5 +1,6 @@
 // @ts-nocheck
 
+import "./addNewRecord.css"
 import { useContext, useEffect, useState } from "react"
 import CustomAlert from "../../alert/customAlert"
 import { AuthContext } from "../../utils/authContext"
@@ -9,6 +10,7 @@ import { request } from "../../utils/axios_helper"
 import BoatModal from "../../modals/boat/boatModal"
 import PersonFormModal from "../../modals/persons/personFormModal"
 import { RecordFormContext, useRecordFormContext } from "../../../providers/recordFormProvider"
+import BoatFormModal from "../../modals/boat/boatFormModal"
 
 
 
@@ -34,7 +36,6 @@ export default function AddNewRecord(){
 
     useEffect(() => { // si cambia el estado globalmente actualizo!
         if(record){
-            console.log("useEffect__ updateDataFormAndResetForm___ " + record?.person?.name)
             updateDataFormAndResetForm(record)
         }
     }, [record]);
@@ -42,103 +43,56 @@ export default function AddNewRecord(){
     function updateDataFormAndResetForm(record){
         console.log("ESTAN LLAMANDO A updateDataFormAndResetForm____ ")
         if(record){
-            console.log("me esta llegando para resetear_____ " + record?.person?.dni)
-            
+            console.log("me esta llegando para resetear_____ " + record?.person?.isUpdate)            
     
             const format = { year: '2-digit', month:'2-digit', day:'2-digit', hour: '2-digit', minute: '2-digit' }
             const start = new Date(record.startTime)
             const end = new Date(record.endTime)
-            const simpleBoat = record.simpleBoat
+            const simpleBoat = record?.simpleBoat
             const person = record?.person
             const license = record?.license
             const registeredBoat = license?.registeredBoat
             const engine = registeredBoat?.engine
+            const boat = record?.boat
 
+            
+
+
+            /*
+           VERIFICAR QUE ESTE ENVIANDO LICENSE Code, DE MANERA CORRECTA!!
+           VERIFICAR QUE ESTE ENVIANDO LICENSE Code, DE MANERA CORRECTA!!
+           VERIFICAR QUE ESTE ENVIANDO LICENSE Code, DE MANERA CORRECTA!!
+           VERIFICAR QUE ESTE ENVIANDO LICENSE Code, DE MANERA CORRECTA!!
+           VERIFICAR QUE ESTE ENVIANDO LICENSE Code, DE MANERA CORRECTA!!
+           VERIFICAR QUE ESTE ENVIANDO LICENSE Code, DE MANERA CORRECTA!!
+            {
+                "idShift" :1 ,
+                "license" : {
+                            "licenseCode" : "msj01"
+                } 
+              }
+            */
 
             reset({
                 "idShift" : shift?.id ,
-                "boat" :  "algo", //record?.boat && ( boat?.boatNotes && `Supuest nombre de ${boat.boatNotes}`),    
+                "license" : record?.license && {
+                     "licenseCode" : `${record?.license.licenseCode.toUpperCase()}`
+                    },
+                "simpleBoat" : record?.simpleBoat && {
+                    "typeSimpleBoat_enum" : simpleBoat?.typeSimpleBoat_enum,
+                    "details" : simpleBoat?.details,
+                    "notes" : simpleBoat?.notes
+                },
                 "person": {
-                    "id": record?.person?.id,
-                    "dni": record?.person?.dni,
-                    "phone": record?.person?.phone,
-                    "name": record?.person?.name,
-                    "lastName": record?.person?.lastName,
-                    "emergency_phone": record?.person?.emergency_phone,
-                    "address": record?.person?.address,
-                    "notes": record?.person?.notes,
-                    "isUpdate" : record?.person?.isUpdate
+                    "dni": record?.person?.dni
                 },
                 "numberOfGuests" : "",
                 "car" : "",
                 "notes" : "",
-                "hasLicense" : "",
-                "license" :  "otra cosa", // record?.boat && (boat?.license ? "Tiene licencia.." : " No tiene licencia.."),  
-                "fullName": person?.name && `Supuest fullname de ${person.name}` ,// dato extra                                              
-                "boatType" :"y otro mas" //boat?.typeBoat_enum // dato extra,             
+                "hasLicense" : boat?.hasLicense,  
+                "fullName": person?.name && `${person.name} ${person.lastName}` ,// dato extra                                              
+                "boatType" :boat?.typeBoat_enum // dato extra,             
             })
-
-/*
-            reset({
-                "id": 1,
-                "idShift" : shift?.id,
-                "startTime": start.toLocaleString([], format),
-                "endTime": record.endTime? end.toLocaleString([], format) : "-- --",
-                "recordState": record.recordState,
-                "license" : license == null ? null : {
-                    "id": license.id ,
-                    "licenseCode": license.licenseCode.toUpperCase(),
-                    "registeredBoat": {
-                        "id": registeredBoat.id,
-                        "engine": {
-                            "id": engine.id,
-                            "engineType_enum": engine.engineType_enum ,
-                            "engineNumber": engine.engineNumber ,
-                            "cc": engine.cc ,
-                            "notes": engine.notes 
-                        },
-                        "hull": registeredBoat.hull ,
-                        "name": registeredBoat.name ,
-                        "capacity": registeredBoat.capacity ,
-                        "details": registeredBoat.details ,
-                        "typeLicencedBoat_enum": registeredBoat.typeLicencedBoat_enum 
-                    },
-                    "owner": {
-                        "id": license?.owner.id ,
-                        "dni": license?.owner.dni ,
-                        "name": license?.owner.name ,
-                        "lastName": license?.owner.lastName ,
-                        "phone": license?.owner.phone ,
-                        "emergency_phone": license?.owner.emergency_phone ,
-                        "address": license?.owner.address ,
-                        "notes": license?.owner.notes ,
-                        "fullName" : `${license?.owner.name} ${license?.owner.lastName}`
-                    },
-                    "licenseState_enum": license.licenseState_enum,
-                    "notes": license.notes
-                },
-                "simpleBoat" : simpleBoat == null ? null : {
-                    "id": simpleBoat.id,
-                    "typeSimpleBoat_enum": simpleBoat.typeSimpleBoat_enum,
-                    "details": simpleBoat.details,
-                    "notes": simpleBoat.notes
-                },
-                "person": {
-                    "id": 11111111,
-                    "dni": record?.person?.dni,
-                    "phone": record?.person?.phone,
-                    "name": record?.person?.name,
-                    "lastName": record?.person?.lastName,
-                    "emergency_phone": record?.person?.emergency_phone,
-                    "address": record?.person?.address,
-                    "notes": record?.person?.notes,
-                    "isUpdate" : record?.person?.isUpdate
-                },
-                "numberOfGuests": record.numberOfGuests,
-                "car": record.car,//.toUpperCase(),
-                "notes": record.notes
-            });
- */
         }
     }
 
@@ -178,51 +132,78 @@ export default function AddNewRecord(){
         )
       }
 
-    function renderFormAddNewRecord(){
+    function renderFormSimpleBoat(){
+        return (
+            <div className="inputContainer">
+              <div className="form-floating mb-4 inputDiv">
+                <input type="text" id="simpleBoat.typeSimpleBoat_enum" name="simpleBoat.typeSimpleBoat_enum" className="form-control" {...register("simpleBoat.typeSimpleBoat_enum")} disabled />
+                <label className="form-label" htmlFor="simpleBoat.typeSimpleBoat_enum">Tipo embarcacion</label>
+              </div>  
+              <div className="form-floating mb-4 inputDiv">
+                <input type="text" id="simpleBoat.details" name="simpleBoat.details" className="form-control" {...register("simpleBoat.details")} disabled />
+                <label className="form-label" htmlFor="simpleBoat.details">Detalles</label>
+              </div>  
+              <div className="form-floating mb-4 inputDiv">
+                <input type="text" id="simpleBoat.notes" name="simpleBoat.notes" className="form-control" {...register("simpleBoat.notes")} disabled />
+                <label className="form-label" htmlFor="simpleBoat.notes">Notas</label>
+              </div>  
+            </div>   
+        )
+    }
+
+    function renderFormLicencedBoat(){
         return (
             <>
+            <div className="inputContainer">
+              <div className="form-floating mb-4 inputDiv">
+                <input type="text" id="license.licenseCode" name="license.licenseCode" className="form-control" {...register("license.licenseCode")} disabled />
+                <label className="form-label" htmlFor="license.licenseCode">Matricula</label>
+              </div>
+              <div className="form-floating mb-4 inputDiv">
+                <input type="text" id="license.registeredBoat.name" name="license.registeredBoat.name" className="form-control" {...register("license.registeredBoat.name")} disabled />
+                <label className="form-label" htmlFor="license.registeredBoat.name">Nombre embarcacion</label>
+              </div>  
+              <div className="form-floating mb-4 inputDiv">
+                <input type="text" id="boatType" name="boatType" className="form-control" {...register("boatType")} disabled />
+                <label className="form-label" htmlFor="boatType">Tipo embarcacion</label>
+                {errors.boatType?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
+              </div>  
+            </div>                  
+            </>
+        )
+    }
+
+    function renderFormAddNewRecord(){
+        return (
             <form onSubmit={handleSubmit(sendForm)} >  
                   <div className="boatContainer">
-                    <h5>Embarcacion</h5>
-                    <div className="inputContainer">
-                      <div className="form-floating mb-4 inputDiv">
-                        <input type="text" id="license" name="license" className="form-control" {...register("license")} disabled />
-                        <label className="form-label" htmlFor="license">Matricula</label>
-                      </div>
-                      <div className="form-floating mb-4 inputDiv">
-                        <input type="text" id="boat" name="boat" className="form-control" {...register("boat")} disabled />
-                        <label className="form-label" htmlFor="boat">Nombre embarcacion</label>
-                      </div>  
-                      <div className="form-floating mb-4 inputDiv">
-                        <input type="text" id="boatType" name="boatType" className="form-control" {...register("boatType")} disabled />
-                        <label className="form-label" htmlFor="boatType">Tipo embarcacion</label>
-                        {errors.boatType?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
-                      </div>  
-                    </div>                 
-
+                    <h5>Embarcacion</h5>    
+                    <span className="btnModalBoat">  
+                        <BoatFormModal boatSelected={(record?.license || record?.simpleBoat) && true } renderAlert={renderAlert}/> 
+                    </span>                       
+                    {record?.license && renderFormLicencedBoat ()}
+                    {record?.simpleBoat &&  renderFormSimpleBoat()}
                   </div>
-
-                  {/*          
-                  <div className="form-check form-switch mb-4 inputDiv">
-                    <input type="checkbox" id="hasLicense" name="hasLicense" className="form-check-input" {...register("hasLicense")} />
-                    <label className="form-check-label" htmlFor="hasLicense">Posee matricula</label>
-                  </div>
-                    */}
-
 
                   <div className="personContainer">
                     <h5>Timonel</h5>
-                    <div className="inputContainer">
-                      <div className="form-floating mb-4 inputDiv">
-                        <input type="number" id="person.dni" name="person.dni" className="form-control"  {...register("person.dni")} disabled />
-                        <label className="form-label" htmlFor="person.dni">Dni</label>
-                        {errors.person?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
+                    <span className="btnModalPerson">
+                        <PersonFormModal personSelected={record?.person} renderAlert={renderAlert}/>
+                    </span>
+                    
+                    {record?.person && (
+                      <div className="inputContainer">
+                        <div className="form-floating mb-4 inputDiv">
+                          <input type="number" id="person.dni" name="person.dni" className="form-control"  {...register("person.dni")} disabled />
+                          <label className="form-label" htmlFor="person.dni">Dni</label>
+                          {errors.person?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
+                        </div>
+                        <div className="form-floating mb-4 inputDiv">
+                          <input type="text" id="fullName" name="fullName" className="form-control"  {...register("fullName")} disabled  />
+                          <label className="form-label" htmlFor="fullName">Nombre y apellido</label>
+                        </div>   
                       </div>
-                      <div className="form-floating mb-4 inputDiv">
-                        <input type="text" id="fullName" name="fullName" className="form-control"  {...register("fullName")} disabled  />
-                        <label className="form-label" htmlFor="fullName">Nombre y apellido</label>
-                      </div>   
-                    </div>
+                    )}
                   </div>
 
 
@@ -246,14 +227,6 @@ export default function AddNewRecord(){
                  
                   <button type="submit" className="btn btn-success btn-lg btn-block mb-3" onClick={()=> console.log("hice click en btn agregar registro")}>Agregar registro</button>
             </form>
-            <span className="btnModalBoat">                      
-                      <BoatModal /*boat={boat} setBoat={setBoat} setFormData={setFormData} setUpdatedForm={setUpdatedForm} formData={formData}*/ renderAlert={renderAlert}/>                    
-                    </span>                
-            <span className="btnModalPerson">
-                      {/* <PersonModal  person={person} setPerson={setPerson} setFormData={setFormData} setUpdatedForm={setUpdatedForm} formData={formData} renderAlert={renderAlert} /> */}
-                      <PersonFormModal renderAlert={renderAlert}/>
-            </span>
-            </>
         )
     }
 
@@ -262,7 +235,7 @@ export default function AddNewRecord(){
         {showAlert && ( <CustomAlert alertConfig={alert} /> )}
         <div className="alert alert-secondary addRecordForm">
             <h4>Agregar nuevo registro </h4> 
-            {pendingPostRequest? renderPendingPostRequest() : renderFormAddNewRecord()}            
+            { pendingPostRequest ? renderPendingPostRequest() : renderFormAddNewRecord() }            
         </div>
         <Link to="/dashboard" className="btn btn-secondary btn-lg" role="button">Volver</Link>
         </>
