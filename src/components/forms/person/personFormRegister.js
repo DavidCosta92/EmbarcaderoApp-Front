@@ -6,84 +6,36 @@ import { AuthContext } from "../../utils/authContext";
 import { useForm, useFormState } from 'react-hook-form';
 import { request } from "../../utils/axios_helper";
 import CustomAlert from "../../alert/customAlert";
+import { RecordFormContext, useRecordFormContext } from "../../../providers/recordFormProvider";
 
-export default function PersonForm({personBd , setPersonBd , setPersonHasUpdates, renderAlert, handleClose}){
+export default function PersonFormRegister({personBd , setPersonBd , setPersonHasUpdates, renderAlert, handleClose}){
 
     const { renderSpiner, renderPendingPostRequest} = useContext(AuthContext)
     const [ loadingPersonForm, setloadingPersonForm ] = useState(false)
     const [ sendingPostRequest , setSendingPostRequest] = useState(false)
     const [ showPersonForm, setShowPersonForm ] = useState(false) // MUESTRA FORMULARIO COMPLETO
-
-    
-    const { register, formState:{errors, isDirty}, handleSubmit, watch , control, reset} = useForm()
-    const { dirtyFields } = useFormState({ control });
-
-
     const [ personAlreadyExistBd, setPersonAlreadyExistBd] = useState(false) // si persona existia previamente en la base de datos
     const [ personToShowFromDb, setPersonToShowFromDb] = useState() // si persona existia previamente en la base de datos, la info se guarda en este estado para mostrar el formulario
 
-    // const [ areUpdatedFiels , setAreUpdatedFiels] = useState(false)
 
-/*
-    useEffect(() => {
-        const subscription = watch((value, { name, type }) => {
-          //setAreUpdatedFiels(true)
-          console.log("modificando form!!!")
-        });
-        return () => subscription.unsubscribe(); // función de limpieza que se ejecuta cuando el componente se desmonta o antes de que el efecto se ejecute nuevamente
-      }, [watch]);
-*/
-    const sendForm = (data) =>{ 
-        setSendingPostRequest(true) 
-        if(personAlreadyExistBd){// Si se encontro por dni 
-            if( Object.keys(dirtyFields).length == 0){ // NO hay cambio de datos, solo seteo persona en el formulario 
-                renderAlert("Persona elegida", "Exito", "success",4000)  
-                setPersonBd(data)
-                setPersonHasUpdates(true)                              
-                handleClose()  
-            } else { // Se actualizo la info que venia desde bd...
-                console.log("SE ENCONTRO PERSONA, Y SE EDITARON DATOS...SE ENVIA MODIFICADO")
-                request(
-                    "PUT",
-                    `person/`,
-                    {...data} )
-                    .then((response) => {        
-                        if(response.status === 202){
-                            renderAlert("Persona actualizada", "Exito", "success",4000)
-                            setSendingPostRequest(false)  
-                            setPersonBd(data)
-                            setPersonHasUpdates(true)                                         
-                            handleClose()  
-                        }
-                    })
-                    .catch((error) => {                        
-                        setSendingPostRequest(false)
-                        renderAlert(`${error.response.status} : ${error.response.data.message}`, "Error", "error", 4000)
-                    }
-                ) 
-            }
-        } else{ // NO se encontro por dni, crear una nueva persona
-            console.log("NO se encontro por dni, crear una nueva persona")
-            data.isUpdate = true
-            request(
-                "POST",
-                `person/`,
-                {...data} )
-                .then((response) => {        
-                    if(response.status === 201){
-                        renderAlert("Persona creada", "Exito", "success",4000)
-                        setSendingPostRequest(false)   
-                        setPersonBd(data)
-                        setPersonHasUpdates(true)   
-                        handleClose()  
-                    }
-                })
-                .catch((error) => {                        
-                    setSendingPostRequest(false)
-                    renderAlert(`${error.response.status} : ${error.response.data.message}`, "Error", "error", 4000)
-                })
+    
+    const { register, formState:{isValid, errors, isDirty}, handleSubmit, watch , control, reset} = useForm()
+    const { dirtyFields } = useFormState({ control });
+
+
+    const {record , setRecord , person , setPerson } =  useContext(RecordFormContext)
+
+
+    const sendForm = (data) =>{
+        if (isValid) {
+            let recordUpd = {...record}
+            recordUpd.person = data
+            setRecord(recordUpd)
+            console.log("PERSONA SETEADA EN RECORD "+data.dni)
+            handleClose()
         }
     }
+
 
     // PRIMERA RECARGA, si no viene persona, cargo datos llamando a back, sino los tomo de los datos enviados..
     useEffect(() => {
@@ -141,6 +93,7 @@ export default function PersonForm({personBd , setPersonBd , setPersonHasUpdates
         ) 
     }
     // cuando tengo personToShowFromDb, reseteo datos por defecto formulario, con datos de la bd, si existen y sino en blanco
+    
     useEffect(() => {
         if (personToShowFromDb) {
             reset({

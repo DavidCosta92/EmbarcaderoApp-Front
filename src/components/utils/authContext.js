@@ -74,14 +74,15 @@ const AuthProvider =({children})=>{
                 username : usernameAtt , 
                 password : passwordAtt
             } )
-        .then( (resp) =>{   
-            setAuthToken(resp.data.token)  
-            navigate("/dashboard") 
-        })
-        .catch( (error) =>{  
-            setLoguedUser(false)   
-            setAuthHeader(null);  
-        })
+            .then( (resp) =>{           
+                setLoguedUser(resp.data)
+                setAuthToken(resp.data.token)  
+                navigate("/dashboard") 
+            })
+            .catch( (error) =>{  
+                setLoguedUser(false)   
+                setAuthHeader(null);  
+            })
     }
     function registerUser (data){        
         request(

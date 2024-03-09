@@ -28,7 +28,6 @@ export default function AddRecord(){
     }, [])
 
     useEffect(()=>{      
-      console.log("Use efecto por setUpdatedForm >>>>> ")
       reset({
         "idShift" : shift?.id ,
         "boat" :  boat && ( boat?.boatNotes && `Supuest nombre de ${boat.boatNotes}`),                                        
@@ -47,6 +46,7 @@ export default function AddRecord(){
     /*
 
     **********************************************************************************************************
+    TODO
 
     DISEÑAR LOGICA PARA EMBARCACIONES CON O SIN MATRICULAS, 
     SEGUN ESO MODIFICAR BACK PARA QUE MANEJE 
@@ -87,15 +87,6 @@ export default function AddRecord(){
     }
 
     const sendForm = (data) =>{
-      console.log("----->>>>>>>>>>>> enviando fomr-----INFO QUE DEBERIA ENVIAR A BACK---------------")
-      console.log("shift?.id " , shift?.id)
-      console.log("boat?.name " , boat?.name)
-      console.log("person " , person?.dni)
-      console.log("data.numberOfGuests.value" ,data.numberOfGuests)
-      console.log("data.car" , data.car)
-      console.log("data.notes" , data.notes)
-      console.log("boat?.hasLicense " , boat?.hasLicense)      
-      console.log("-----------------------------")
       // TRANSFORMO INFO ANTES DE ENVIAR A BACK
       formData.idShift = shift?.id
       formData.boat = boat?.name == undefined && "duppper" // HARDCODDEADO PARA QUE NO FALLE BACK... LUEGO MODIFICAR PARA QUE SEA REAL..

@@ -26,6 +26,16 @@ background-color: rgba(128, 128, 128, 0.314);
 
 }
 
+.form-control:disabled.licenseState_OK{
+    background-color: rgba(0, 128, 0, 0.31);
+}
+.licenseState_INHABILITADA_TEMPORALMENTE{
+    background-color: rgba(255, 196, 0, 0.76);
+}
+
+.licenseState_BAJA{
+    background-color: rgba(255, 0, 0, 0.315);
+}
 .formRecordDetails .smallInputContainer{
     display: flex;
     flex-wrap: wrap;
