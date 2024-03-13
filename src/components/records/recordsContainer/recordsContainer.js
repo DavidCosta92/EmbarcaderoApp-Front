@@ -10,9 +10,7 @@ export default function RecordsContainer({records}){
                 <h4>Registros de la guardia</h4>
                 <Link to="/addNewRecord" className="btn btn-success btn-lg" role="button">Nuevo registro</Link>
             </span>
-
-            <h3  className="funcionalidadPendiente"> DEFINIR CANTIDAD DE DATOS, Y ORGANIZAR TABLA</h3>
-
+            <p className="funcionalidadPendiente"> Aca me gustaria poner badges con el total de embarcaciones activas y el total de personas https://mui.com/material-ui/react-badge/</p>
             <table className="table table-secondary table-striped ">
                 <thead>
                     <tr>
