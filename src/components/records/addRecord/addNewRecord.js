@@ -7,7 +7,7 @@ import { AuthContext } from "../../utils/authContext"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 import { request } from "../../utils/axios_helper"
-import BoatModal from "../../modals/boat/boatModal"
+import { useNavigate } from 'react-router-dom';
 import PersonFormModal from "../../modals/persons/personFormModal"
 import { RecordFormContext, useRecordFormContext } from "../../../providers/recordFormProvider"
 import BoatFormModal from "../../modals/boat/boatFormModal"
@@ -15,6 +15,7 @@ import BoatFormModal from "../../modals/boat/boatFormModal"
 
 
 export default function AddNewRecord(){
+  const navigate = useNavigate()
     const {renderPendingPostRequest, getShiftUser, shift} = useContext(AuthContext)
     
     const {record , setRecord } =  useContext(RecordFormContext)
@@ -98,26 +99,66 @@ export default function AddNewRecord(){
 
     const sendForm = (data) =>{
         // TRANSFORMO INFO ANTES DE ENVIAR A BACK
-        /*
-        formData.idShift = shift?.id
-        formData.boat = boat?.name == undefined && "duppper" // HARDCODDEADO PARA QUE NO FALLE BACK... LUEGO MODIFICAR PARA QUE SEA REAL..
-        formData.person = person?.dni
-        formData.numberOfGuests = data.numberOfGuests
-        formData.car = data.car.toUpperCase()
-        formData.notes = data.notes
-        formData.hasLicense = true // boat?.hasLicense VA TRUE PARA QUE NO FALLE BACK... LUEGO MODIFICAR PARA QUE SEA REAL..
-        */
+
+       /* NECESITO RECIBIR EN BACKEND..
+        "idShift" :1 ,
+        "person" : "35924410",
+        "numberOfGuests" : 2,
+        "car" : "AE735AF",
+        "notes" : "Primer registro post refactor",
+        "hasLicense" : false
+
+
+
+        "simpleBoat": {
+            "typeSimpleBoat_enum" : "KITESURF",
+            "details" : "Kite rojo y blanco, con numero 23",
+            "notes" : "Kite en perfectas condiciones, sin casco."
+        },
+
+        "license" :{
+          "licenseCode": "msjjj"
+          "registeredBoat": {
+
+          }
+        }
+
+       */
+        let formData = data
+        formData.person = data.person.dni //person :{dni: '35924410'}
+        formData.hasLicense = data.license != null ? true : false //  hasLicense :undefined
+
+        delete formData.fullName
+        delete formData.boatType
+        if(data.license){
+          delete formData.license.registeredBoat
+        }
+
 
         setPendingPostRequest(true)
         request(
             "POST",
             "records/",
-            /* formData*/)
+            formData)
             .then((response) => {      
               setPendingPostRequest(false)
               if(response.status ===201){
-                renderAlert("Registro creado!", "Exito", "success",4000)              
-                reset()// limpiar form..
+                renderAlert("Registro creado!", "Exito", "success",4000)    
+                setRecord({}) // Limpio record para que campos boat y person queden limpios
+                reset()// limpiar form, campos simples
+                
+                // TODO aca se redirige a la pagina, pero se alcanza a ver la notificacion??? 
+                // TODO aca se redirige a la pagina, pero se alcanza a ver la notificacion??? 
+                // TODO aca se redirige a la pagina, pero se alcanza a ver la notificacion??? 
+                // TODO aca se redirige a la pagina, pero se alcanza a ver la notificacion??? 
+                
+                navigate("/dashboard")
+                
+                // TODO aca se redirige a la pagina, pero se alcanza a ver la notificacion??? 
+                // TODO aca se redirige a la pagina, pero se alcanza a ver la notificacion??? 
+                // TODO aca se redirige a la pagina, pero se alcanza a ver la notificacion??? 
+                // TODO aca se redirige a la pagina, pero se alcanza a ver la notificacion??? 
+
               }
             })
             .catch(
@@ -225,7 +266,7 @@ export default function AddNewRecord(){
                     {errors.notes?.type === "maxLength" && <p className="inputFormError">Largo maximo de 255 caracteres</p>}
                   </div>
                  
-                  <button type="submit" className="btn btn-success btn-lg btn-block mb-3" onClick={()=> console.log("hice click en btn agregar registro")}>Agregar registro</button>
+                  <button type="submit" className="btn btn-success btn-lg btn-block mb-3">Agregar registro</button>
             </form>
         )
     }

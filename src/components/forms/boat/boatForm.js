@@ -218,9 +218,10 @@ export default function BoatForm ({handleClose, renderAlert}){
                 <div className="form-outline mb-4 inputDiv">
                     <label  htmlFor="typeSimpleBoat_enum">Tipo de embarcacion</label>
                     <select id="typeSimpleBoat_enum" name="typeSimpleBoat_enum" className="form-select" {...register("typeSimpleBoat_enum")}>
-                        <option value="LANCHA">Lancha </option>
-                        <option value="HIDROPEDAL">Hidropedal </option>
-                        <option value="KAYAK">Kayak</option>
+                        <option value="SIMPLE_KAYAK">Kayak simple </option>
+                        <option value="SUP">Sup </option>
+                        <option value="KITESURF">Kitesurf</option>
+                        <option value="WINDSURF">Windsurf</option>
                         <option value="OTROS">Otros </option>
                     </select>
                 </div>                                                         
