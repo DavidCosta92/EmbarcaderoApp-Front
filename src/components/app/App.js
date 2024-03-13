@@ -13,6 +13,7 @@ import ProtectedRoute from '../utils/protectedRoute'
 import { user_role } from '../utils/userRoles'
 import RecordFormProvider from '../../providers/recordFormProvider'
 import AddNewRecord from '../records/addRecord/addNewRecord'
+import UserProfile from '../userProfile/userProfile'
 
 
 export default function App (){
@@ -36,7 +37,7 @@ export default function App (){
                             <Route path='/dashboard' element={<AuthContent/>} />
                             <Route path='/licenses' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}     
                             <Route path='/persons' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}   
-                            <Route path='/userProfile' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}   
+                            <Route path='/userProfile' element={<UserProfile/>} />   
                         </Route>
 
                         {/* RUTAS AUTHENTICADOS && ROLES NAUTICOS  o ADMIN */}

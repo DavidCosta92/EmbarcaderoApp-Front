@@ -9,9 +9,6 @@ import Dashboard from '../dashboards/dashboard'
 
 export default function AuthContent (){    
     const {loguedUser, setLoguedUser, renderSpiner, setAuthHeader , setUserFromSessionStorage, loadingUser} = useContext(AuthContext)
-
-    const [loading, setLoading ] = useState(true);
-
     useEffect(()=>{
         getUserDetails ()
     }, [])
@@ -23,7 +20,6 @@ export default function AuthContent (){
     function renderContent(){
         return (
             <div>
-                <UserDetails/>
                 <Dashboard role={loguedUser.role}/>
              </div>
         )

@@ -1,11 +1,9 @@
 // @ts-nocheck
 import { useContext, useState, useEffect } from "react";
 import "./personForm.css"
-import TextField from '@mui/material/TextField';
 import { AuthContext } from "../../utils/authContext";
 import { useForm, useFormState } from 'react-hook-form';
 import { request } from "../../utils/axios_helper";
-import CustomAlert from "../../alert/customAlert";
 import { RecordFormContext } from "../../../providers/recordFormProvider";
 
 export default function PersonFormRegister({personBd , setPersonBd , setPersonHasUpdates, renderAlert, handleClose}){
@@ -28,22 +26,74 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
     const sendForm = (data) =>{
         if (isValid) {
             const formHasChanges = Object.keys(dirtyFields).length >0
-            let recordUpd = {...record}
-            recordUpd.person = data
-            recordUpd.person.isUpdate = formHasChanges
-
-            if(formHasChanges){ // si se crea nuevo formulario, o si se modifico la persona que existia debo pegarle al backedn!
-                // aca deberia llamar a guardar persona, si es que viene con datos nuevos, o si es para actualizar datos!
-                // aca deberia llamar a guardar persona, si es que viene con datos nuevos, o si es para actualizar datos!
-                // aca deberia llamar a guardar persona, si es que viene con datos nuevos, o si es para actualizar datos!
-                // aca deberia llamar a guardar persona, si es que viene con datos nuevos, o si es para actualizar datos!
-                // aca deberia llamar a guardar persona, si es que viene con datos nuevos, o si es para actualizar datos!
-            }
-            setRecord(recordUpd)
-            renderAlert("Persona elegida", "Exito", "success",4000)          
-            handleClose()
+            if(formHasChanges){ // si se crea nuevo formulario, o si se modifico la persona que existia debo pegarle al backedn!                
+                if(personToShowFromDb.id== ""){
+                    createNewPerson(data)
+                } else{                    
+                    updatePerson(data)
+                }
+            } else if (personToShowFromDb.id  != ""){
+                let recordUpd = {...record}
+                recordUpd.person = data
+                recordUpd.person.isUpdate = false
+                setRecord(recordUpd)
+                renderAlert("Persona elegida", "Exito", "success",4000)   
+                handleClose()
+            }            
         }
     }
+
+    const createNewPerson=(data)=>{
+        setSendingPostRequest(true)
+        request(
+            "POST",
+            `person/`,
+            data )
+            .then((response) => {                  
+                setSendingPostRequest(false)
+                if(response.status == 201){                
+                    let recordUpd = {...record}            
+                    recordUpd.person = data 
+                    recordUpd.person.isUpdate = false
+                    setRecord(recordUpd)
+                    renderAlert("Persona elegida", "Exito", "success",4000)   
+                    handleClose()
+                }
+            })
+            .catch((error) => {   
+                setShowPersonForm(true)
+                renderAlert(error.response?.data?.message, "Error", "warning",5000)
+                setSendingPostRequest(false)
+            }
+        )        
+        
+    }
+
+    const updatePerson=(data)=>{
+        request(
+            "PUT",
+            `person/`,
+            data )
+            .then((response) => {                  
+                setSendingPostRequest(false)
+                if(response.status == 202){
+                    // setPersonToShowFromDb(response.data) => no hace falta porque voy a cerrar el modal directamente                
+                    let recordUpd = {...record}            
+                    recordUpd.person = data // esto es porque si create da error al llamar al back, no deberian seguir ejecutando el codigo y en ese caso, person queda en null
+                    recordUpd.person.isUpdate = true
+                    setRecord(recordUpd)
+                    renderAlert("Persona actualizada", "Exito", "success",4000)   
+                    handleClose()
+                }   
+            })
+            .catch((error) => {
+                setShowPersonForm(true)
+                renderAlert(error.response?.data?.message, "Error", "warning",5000)
+                setSendingPostRequest(false)
+            }
+        ) 
+    }
+
 
 
     // PRIMERA RECARGA, si no viene persona, cargo datos llamando a back, sino los tomo de los datos enviados..
@@ -169,7 +219,9 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
                                         <input type="text" id="notes" name="notes" className="form-control" {...register("notes")} />
                                         {errors.notes?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                                     </div>
-                                    <button type="submit"  className="btn btn-primary btn-block mb-4">Guardar</button>
+                                    {isDirty? <button type="submit"  className="btn btn-warning btn-block mb-4">Actualizar</button> : <button type="submit"  className="btn btn-primary btn-block mb-4">Guardar</button>}
+                                    
+                                    
                                 </>                                
                             )}   
                         </form>

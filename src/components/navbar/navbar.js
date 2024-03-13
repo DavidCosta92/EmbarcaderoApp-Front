@@ -21,7 +21,7 @@ import MenuItem from '@mui/material/MenuItem';
 import SailingIcon from '@mui/icons-material/Sailing';
 
 const pages = ['Dashboard', 'Matriculas', 'Personas', 'Algo mas?'];
-const settings = ['Perfil', 'Algo mas?', 'Logout'];
+const settings = ['Perfil', 'Logout'];
 
 export default function Navbar(){
 
