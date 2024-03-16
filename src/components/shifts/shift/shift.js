@@ -72,7 +72,7 @@ export default function Shift (){
                         <span className="notes">                            
                             <p> Notas: {shift.notes}</p>
                         </span>                                       
-                    </div>                    
+                    </div>          
                     <RecordsContainer records={shift.records}/>
                     <StaffContainer staff = {shift.staff}/>
                     

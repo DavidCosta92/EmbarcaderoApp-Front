@@ -8,3 +8,13 @@
     justify-content: space-between;
     margin-bottom: 30px;
 }
+.recordContainer span.tableHeader span.tableHeaderActions{
+    display: flex;
+    justify-content: space-between;
+    width: 33%;
+}
+.recordContainer span.tableHeader span div{
+    display: flex;
+    justify-content: space-between;
+    width: 30%;
+}
