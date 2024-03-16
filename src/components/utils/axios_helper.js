@@ -1,7 +1,10 @@
 // @ts-nocheck
 import axios from "axios"
 
-axios.defaults.baseURL = 'http://localhost:8080'
+const LOCAL_URL = "http://localhost:5000"
+const AWS_URL = "http://embarcadero-vacio-env.eba-z4dzvsrp.us-east-1.elasticbeanstalk.com/"
+
+axios.defaults.baseURL = LOCAL_URL
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
 export const request = (method, url, data) =>{

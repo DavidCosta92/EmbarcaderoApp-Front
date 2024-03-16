@@ -10,10 +10,10 @@ const AuthContext = React.createContext();
 
 const AuthProvider =({children})=>{
     const navigate = useNavigate()
-    const [loguedUser, setLoguedUser] = useState(false)
+    const [ loguedUser, setLoguedUser] = useState(false)
     const [ shift, setShift ] = useState(null)
     const [ loadingShift, setLoadingShift ] = useState()
-    const [ loadingUser, setLoadingUser ] = useState()
+    const [ loadingUser, setLoadingUser ] = useState()    
     
     useEffect(()=>{
         setUserFromSessionStorage()
@@ -23,7 +23,8 @@ const AuthProvider =({children})=>{
         getShiftUser()
     }, [loguedUser])
 
-    function getShiftUser(){          
+    function getShiftUser(){     
+        setLoadingShift(true)      
         request(
             "GET",
             `shifts/user/${loguedUser.id}`,
@@ -31,10 +32,13 @@ const AuthProvider =({children})=>{
             .then(
             (response) => {             
                 setShift(response.data) 
-                setLoadingShift(false)
+                setLoadingShift(false)          
             })
             .catch((error) => {
-                setShift(null)
+                if(error.response.status == 404){       
+                    setShift(null)           
+                    setLoadingShift(false)  
+                }
         })
     }
     function getAuthToken(){

@@ -4,21 +4,58 @@ import RecordsContainer from "../../records/recordsContainer/recordsContainer.js
 import StaffContainer from "../../staff/staffContainer/staffContainer.js"
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../utils/authContext.js";
+import { useForm } from "react-hook-form";
+import { request } from "../../utils/axios_helper.js";
+import CustomAlert from "../../alert/customAlert.js";
 
 export default function Shift (){    
 
-    const {getShiftUser, renderSpiner, shift, loadingShift, setLoadingShift} = useContext(AuthContext)
+    const { loguedUser,renderPendingPostRequest, getShiftUser, renderSpiner, shift, setShift, loadingShift, setLoadingShift} = useContext(AuthContext)
 
+    const { register, formState:{errors, isDirty}, handleSubmit, watch , control, reset} = useForm()
+    const [ sendingPostRequest , setSendingPostRequest] = useState(false)
+    
+    const [ showAlert, setShowAlert] = useState(false)
+    const [ alert, setAlert] = useState()
 
     useEffect(()=>{
-        setLoadingShift(true)
         getShiftUser()
     }, [])
-
+    
+    function renderAlert(msg, title, style, miliseg){
+        setShowAlert(true)
+        setAlert({msg:msg, title: title, style: style})
+        setTimeout(() => {
+            setShowAlert(false);
+        }, miliseg);
+      }
+    function sendForm(data){
+        data.staff=[loguedUser.dni]
+        createShift(data)
+    }
+    function createShift(data){
+        setSendingPostRequest(true)
+        request(
+            "POST",
+            `/shifts/`,
+            data )
+            .then((response) => {                  
+                setSendingPostRequest(false)
+                if(response.status == 201){       
+                    setShift(response.data)
+                    renderAlert("Guardia creada!", "Exito", "success",4000)   
+                }
+            })
+            .catch((error) => {   
+                setShift(null)
+                renderAlert(error.response?.data?.message, "Error", "warning",5000)
+                setSendingPostRequest(false)
+            }
+        )   
+    }
     function renderShift (){
-        const fecha = new Date(shift?.date)
-
-        if(shift){
+        if(shift !== null ){
+            const fecha = new Date(shift?.date)
             return(
                 <div className="actualShift">
                     <div className="header">
@@ -50,20 +87,42 @@ export default function Shift (){
                 </div>
             )
         } else{
-            return (
+            return(
                 <div className="actualShift">
                     <div className="header">
                         <h5 className="">No hay guardia cargada para el usuario</h5>                 
                     </div>      
+                    {renderFormCreateShift()}
                 </div>
             )
         }
-
     }
-
+    function renderFormCreateShift(){
+        return(
+            <form onSubmit={handleSubmit(sendForm)} >  
+                <h6>¿Quieres crear una nueva guardia? </h6>
+                <div className="form-outline mb-4 inputDiv">
+                    <label  htmlFor="dam">Elije el dique</label>
+                    <select id="dam" name="dam" className="form-select" {...register("dam")}>
+                        <option value="DIQUE_ULLUM">Ullum</option>
+                        <option value="DIQUE_PUNTA_NEGRA">Punta negra </option>
+                        <option value="DIQUE_CUESTA_DEL_VIENTO">Cuesta del viento</option>    
+                    </select>
+                </div>            
+                <div className="form-outline mb-4 inputDiv">
+                    <label className="form-label" htmlFor="notes">Notas</label>
+                    <input type="text" id="notes" name="notes" className="form-control" {...register("notes")} />
+                    {errors.notes?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
+                </div>                         
+                <button type="submit" className="btn btn-success btn-lg btn-block mb-3">Crear guardia!</button>
+            </form>           
+        )
+    }
     return (      
-        <>
-        {loadingShift?  renderSpiner() : renderShift()}
+        <>        
+        { showAlert && ( <CustomAlert alertConfig={alert} /> )}
+        { sendingPostRequest && renderPendingPostRequest()}
+        { loadingShift?  renderSpiner() : renderShift()}
         </>
     )
 }
