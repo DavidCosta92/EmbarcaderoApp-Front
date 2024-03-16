@@ -9,20 +9,15 @@ import { RecordFormContext } from "../../../providers/recordFormProvider";
 export default function PersonFormRegister({personBd , setPersonBd , setPersonHasUpdates, renderAlert, handleClose}){
 
     const { renderSpiner, renderPendingPostRequest} = useContext(AuthContext)
+    const {record , setRecord } =  useContext(RecordFormContext)
     const [ loadingPersonForm, setloadingPersonForm ] = useState(false)
     const [ sendingPostRequest , setSendingPostRequest] = useState(false)
     const [ showPersonForm, setShowPersonForm ] = useState(false) // MUESTRA FORMULARIO COMPLETO
     const [ personToShowFromDb, setPersonToShowFromDb] = useState() // si persona existia previamente en la base de datos, la info se guarda en este estado para mostrar el formulario
-
-
-    
+    const [ creatingNewPerson, setCreatingNewPerson] = useState(false) 
     const { register, formState:{isValid, errors, isDirty}, handleSubmit, watch , control, reset} = useForm()
     const { dirtyFields } = useFormState({ control });
-
-
-    const {record , setRecord } =  useContext(RecordFormContext)
-
-
+    
     const sendForm = (data) =>{
         if (isValid) {
             const formHasChanges = Object.keys(dirtyFields).length >0
@@ -42,7 +37,6 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
             }            
         }
     }
-
     const createNewPerson=(data)=>{
         setSendingPostRequest(true)
         request(
@@ -65,10 +59,8 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
                 renderAlert(error.response?.data?.message, "Error", "warning",5000)
                 setSendingPostRequest(false)
             }
-        )        
-        
+        )    
     }
-
     const updatePerson=(data)=>{
         request(
             "PUT",
@@ -76,8 +68,7 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
             data )
             .then((response) => {                  
                 setSendingPostRequest(false)
-                if(response.status == 202){
-                    // setPersonToShowFromDb(response.data) => no hace falta porque voy a cerrar el modal directamente                
+                if(response.status == 202){              
                     let recordUpd = {...record}            
                     recordUpd.person = data // esto es porque si create da error al llamar al back, no deberian seguir ejecutando el codigo y en ese caso, person queda en null
                     recordUpd.person.isUpdate = true
@@ -94,20 +85,24 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
         ) 
     }
 
-
-
     // PRIMERA RECARGA, si no viene persona, cargo datos llamando a back, sino los tomo de los datos enviados..
     useEffect(() => {
+        let person = null
         if(personBd?.dni){
+            person = personBd
+        } else if(record?.person?.dni) {            
+            person = record?.person
+        }
+        if(person){
             reset({
-                "id": personBd.id ,
-                "dni": personBd.dni ,
-                "phone": personBd.phone ,
-                "name": personBd.name ,
-                "lastName": personBd.lastName ,
-                "emergency_phone": personBd.emergency_phone ,
-                "address": personBd.address ,
-                "notes": personBd.notes ,
+                "id": person.id ,
+                "dni": person.dni ,
+                "phone": person.phone ,
+                "name": person.name ,
+                "lastName": person.lastName ,
+                "emergency_phone": person.emergency_phone ,
+                "address": person.address ,
+                "notes": person.notes ,
             });
             setShowPersonForm(true) 
         }
@@ -135,6 +130,7 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
             .catch((error) => {    
                 if(error.response?.status == 404){
                     setShowPersonForm(true)
+                    setCreatingNewPerson(true)
                     setPersonToShowFromDb({
                         "id": "" ,
                         "phone": "" ,
@@ -219,9 +215,7 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
                                         <input type="text" id="notes" name="notes" className="form-control" {...register("notes")} />
                                         {errors.notes?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                                     </div>
-                                    {isDirty? <button type="submit"  className="btn btn-warning btn-block mb-4">Actualizar</button> : <button type="submit"  className="btn btn-primary btn-block mb-4">Guardar</button>}
-                                    
-                                    
+                                    {(isDirty && !creatingNewPerson)? <button type="submit"  className="btn btn-warning btn-block mb-4">Actualizar</button> : <button type="submit"  className="btn btn-primary btn-block mb-4">Guardar</button>}                                    
                                 </>                                
                             )}   
                         </form>
