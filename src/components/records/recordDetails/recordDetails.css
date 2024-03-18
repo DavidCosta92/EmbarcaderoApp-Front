@@ -1,8 +1,10 @@
 .formRecordDetails{
-    margin-top: 2vh;
+    padding-top: 5vh;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    max-width: 900px;
+    margin: auto;
 
 }
 
@@ -39,13 +41,14 @@ background-color: rgba(128, 128, 128, 0.314);
 .formRecordDetails .smallInputContainer{
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
 }
 
 .formRecordDetails .smallInputContainer div{
-    width: 90%;
-    max-width: 350px;
+    width: 49%;
+    min-width: 250px;
+    margin: auto;
 
 }
 .formRecordDetails .textArea{
@@ -58,4 +61,11 @@ background-color: rgba(128, 128, 128, 0.314);
 .goBackBtn{
     margin-top: 5vh;
     margin-left: 5vw;
+}
+
+.addRecordForm .btnModalPerson{
+    position: absolute;
+    top: 45vh;
+    right: 5vw;
+
 }

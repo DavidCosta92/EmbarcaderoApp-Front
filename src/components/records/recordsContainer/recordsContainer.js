@@ -15,7 +15,7 @@ export default function RecordsContainer({records}){
             records.map(rec=>{
                 if(rec.recordState == "ACTIVO"){
                     activePersons += rec.numberOfGuests +1 // invitados + timonel
-                    activeBoats += activeBoats+1
+                    activeBoats +=1
                 }
             })   
         return (

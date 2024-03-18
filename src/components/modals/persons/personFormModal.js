@@ -10,7 +10,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import RegisterForm from "../../forms/register/registerForm";
-import PersonForm from "../../forms/person/personForm";
+import PersonForm from "../../forms/person/ELIMINAR---personForm";
 import { useState, useContext } from "react";
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import PersonFormRegister from "../../forms/person/personFormRegister";
@@ -41,7 +41,7 @@ export default function PersonFormModal ({personSelected , renderAlert}){
             <DialogContentText>
               Si los datos no son correctos debes actualizarlos!
             </DialogContentText>            
-            <PersonFormRegister  renderAlert={renderAlert}  handleClose={handleClose} />
+            <PersonFormRegister personSelected={personSelected} renderAlert={renderAlert}  handleClose={handleClose} />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancelar</Button>

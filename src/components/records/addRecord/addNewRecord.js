@@ -11,29 +11,19 @@ import { useNavigate } from 'react-router-dom';
 import PersonFormModal from "../../modals/persons/personFormModal"
 import { RecordFormContext, useRecordFormContext } from "../../../providers/recordFormProvider"
 import BoatFormModal from "../../modals/boat/boatFormModal"
+import { AlertContext } from "../../utils/alertContex"
 
 
 
 export default function AddNewRecord(){
   const navigate = useNavigate()
     const {renderPendingPostRequest, getShiftUser, shift} = useContext(AuthContext)
-    
+    const { alert, renderAlert, displayAlert } = useContext(AlertContext)    
     const {record , setRecord } =  useContext(RecordFormContext)
 
 
     const {register, formState:{errors}, handleSubmit, watch, reset } = useForm()   
-    const [ showAlert, setShowAlert] = useState(false)
-    const [ alert, setAlert] = useState()
     const [ pendingPostRequest , setPendingPostRequest ] = useState (false)
-
-
-    function renderAlert(msg, title, style, miliseg){
-        setShowAlert(true)
-        setAlert({msg:msg, title: title, style: style})
-        setTimeout(() => {
-            setShowAlert(false);
-        }, miliseg);
-      }
 
     useEffect(() => { // si cambia el estado globalmente actualizo!
         if(record){
@@ -124,6 +114,7 @@ export default function AddNewRecord(){
         }
 
        */
+      console.log("LLLAMANDO A CREAR REGISTRO")
         let formData = data
         formData.person = data.person.dni //person :{dni: '35924410'}
         formData.hasLicense = data.license != null ? true : false //  hasLicense :undefined
@@ -273,7 +264,7 @@ export default function AddNewRecord(){
 
     return (
         <>
-        {showAlert && ( <CustomAlert alertConfig={alert} /> )}
+        {alert && displayAlert(alert)}
         <div className="alert alert-secondary addRecordForm">
             <h4>Agregar nuevo registro </h4> 
             { pendingPostRequest ? renderPendingPostRequest() : renderFormAddNewRecord() }            

@@ -9,7 +9,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import RegisterForm from "../../forms/register/registerForm";
-import PersonForm from "../../forms/person/personForm";
+import PersonForm from "../../forms/person/ELIMINAR---personForm";
 import { useState, useContext } from "react";
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 

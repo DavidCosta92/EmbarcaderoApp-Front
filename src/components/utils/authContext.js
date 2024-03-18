@@ -35,7 +35,7 @@ const AuthProvider =({children})=>{
                 setLoadingShift(false)          
             })
             .catch((error) => {
-                if(error.response.status == 404){       
+                if(error.response?.status == 404){       
                     setShift(null)           
                     setLoadingShift(false)  
                 }

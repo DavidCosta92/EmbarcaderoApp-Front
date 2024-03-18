@@ -6,84 +6,54 @@ import {  request } from "../../utils/axios_helper.js";
 import { AuthContext } from "../../utils/authContext.js";
 import { useForm, useFormState } from 'react-hook-form';
 import CustomAlert from "../../alert/customAlert.js";
-import PersonModal from "../../modals/persons/personModal.js";
+import PersonModal from "../../modals/persons/ELIMINAR---personModal.js";
+import { AlertContext } from "../../utils/alertContex.js";
+import PersonFormModal from "../../modals/persons/personFormModal.js";
+import { RecordFormContext } from "../../../providers/recordFormProvider.js";
 
 
 export default function RecordDetails (){
+    const { alert, renderAlert, displayAlert } = useContext(AlertContext)
     const {loguedUser , renderSpiner,shift , renderPendingPostRequest, getShiftUser} = useContext(AuthContext)
+    const {record , setRecord } =  useContext(RecordFormContext)
+
     const {id} = useParams();
     const {register, formState:{errors, isDirty}, handleSubmit , reset, control} = useForm()
     const { dirtyFields } = useFormState({ control });
 
     const [ pendingPostRequest , setPendingPostRequest ] = useState (false)   
     const [ loading, setLoading ] = useState(true)   
-    const [ record , setRecord ] = useState(null)
-    const [ changedRecordState , setChangedRecordState ] = useState(false)
     
-    const [showAlert, setShowAlert] = useState(false)
-    const [alert, setAlert] = useState()
-
-
-
-    // modal persona
-    // modal persona
-    // modal persona
+    const [ changedRecordState , setChangedRecordState ] = useState(false) // si cambia record state
+    
     const [ personBd , setPersonBd] = useState(null)
     const [ personHasUpdates, setPersonHasUpdates] = useState()
-    // modal persona
-    // modal persona
-    // modal persona
 
-/*
-    useEffect(()=>{
-        if(person){
-            record.person = person
-        }
-    }, [updatedForm])
-*/
 
-    // Si se actualiza formulario de persona
-
-    /*
-    useEffect(() => {
-        console.log("ME ACTUALIZO EN UN USE EFECT PORQUE PERSON HAS UPDATES => "+personBd?.dni)
-        if(record){
-            let updatedRecord = record
-            updatedRecord.person = personBd
-            console.log("updatedRecord ====> "+updatedRecord.person.dni)
-            setRecord(updatedRecord)
-        }
-       setPersonHasUpdates(false)
-    }, [personHasUpdates]);
-    */
-
-    // Al renderizar obtengo record
-    useEffect(()=>{ // esto es porque si ya habia cargado el record antes, no lo vuelvo a llamar, lo que permite abrir los modales y cerrarlos sin estar llamando al back cada vez
-        if(personHasUpdates){ // si hubieron updates, no recargo desde bd
-            console.log("PARECE QUE personHasUpdates => ")
-            if(record){
-                let updatedRecord = record
-                updatedRecord.person = personBd
-                console.log("updatedRecord ====> "+updatedRecord.person.dni)
-                setRecord(updatedRecord)
-            }
-        } else{
-            const fetchData = async () => {
-                console.log("CADA VEZ QUE CIERRO EL MODAL, ESTOY LLAMANDO AL GET RECORD BY ID, LO QUE ME BORRA TODOS LOS DATOS QUE TRAIGO DEL MODAL => ")
-                const data =  getRecordById();    
-                setRecord(data);
-                setLoading(false);
-            };
-            fetchData(); 
-        }
+    // Al renderizar obtengo record y shift
+    useEffect(()=>{        
+        console.log("ESTOY ACTUALIZANDO TODO....")
+        const fetchData = async () => {
+            const data =  getRecordById()
+            setRecord(data)
+            setLoading(false)
+            getShiftUser()
+        };
+        fetchData(); 
     }, [])
 
-    // cuando tengo record, pido shift
-    useEffect(()=>{
-        getShiftUser()
-    }, [record])
+    useEffect(() => { // si cambia el estado de [record] actualizo campos de formulario!
+        if(record){
+            updateDataFormAndResetForm(record)
+            if (personBd?.dni != record.person?.dni || record.person.isUpdate ){
+                setPersonHasUpdates(true)
+            }
+        }
+    }, [record]);
+
 
     function updateDataFormAndResetForm(record){
+        console.log("ESTAN LLAMANDO A updateDataFormAndResetForm____ ")
         const format = { year: '2-digit', month:'2-digit', day:'2-digit', hour: '2-digit', minute: '2-digit' }
         const start = new Date(record.startTime)
         const end = new Date(record.endTime)
@@ -92,7 +62,7 @@ export default function RecordDetails (){
         const license = record.license
         const registeredBoat = license?.registeredBoat
         const engine = registeredBoat?.engine
-       
+        
         reset({
             "id": id,
             "idShift" : shift?.id,
@@ -146,7 +116,8 @@ export default function RecordDetails (){
                 "emergency_phone": person.emergency_phone,
                 "address": person.address,
                 "notes": person.notes,
-                "isUpdate" : person.isUpdate
+                "isUpdate" : personBd?.dni == record.person?.dni,
+                "withOutChange" : person.withOutChange
                 },
             "numberOfGuests": record.numberOfGuests,
             "car": record.car,//.toUpperCase(),
@@ -154,12 +125,6 @@ export default function RecordDetails (){
         });
 
     }
-    // cuando tengo todo, reseteo datos por defecto formulario
-    useEffect(() => {
-        if (record) {
-            updateDataFormAndResetForm(record)
-        }
-    }, [shift]);
 
     function getRecordById(){      
         console.log("estoy pidiendo datos de record nuevamente => getRecordById()") 
@@ -184,26 +149,18 @@ export default function RecordDetails (){
         recordStateInput.classList.add("form-select", `record_${event.target.value}`)
         setChangedRecordState(true)
     }
-    function renderAlert(msg, title, style, miliseg){
-        setShowAlert(true)
-        setAlert({msg:msg, title: title, style: style})
-        setTimeout(() => {
-            setShowAlert(false);
-         }, miliseg);
-    }
+    
     function cleanDataForm(data){
         const cleanedData = data
         cleanedData.startTime = record.startTime
 
         // si NO hubieron cambios en los campos, los elimino para no enviar sin sentido
-        if (!dirtyFields.person){
-            cleanedData.person = null
+        if(personBd?.dni == record.person?.dni){
+            cleanedData.person = null 
         } else{
-            cleanedData.person.isUpdate = true
+            cleanedData.person = {"dni" : record.person?.dni , "isUpdate" : false}
         }
-        if (!dirtyFields.recordState){
-            cleanedData.recordState = null
-        }
+
         if (!dirtyFields.numberOfGuests){
             cleanedData.numberOfGuests = null
         }
@@ -213,6 +170,8 @@ export default function RecordDetails (){
         if (!dirtyFields.notes){
             cleanedData.notes = null
         }
+        
+        
         
         
         // FIXME
@@ -235,11 +194,9 @@ export default function RecordDetails (){
 
         return cleanedData
     }
-    const updateRecord = (data) =>{
-        
+    const sendForm = (data) =>{    
+        const cleanedData = cleanDataForm(data)  
         setPendingPostRequest(true)
-        const cleanedData = cleanDataForm(data)
-
         request(
             "PUT",
             `records/${id}`,
@@ -256,53 +213,47 @@ export default function RecordDetails (){
             }
         )
     }
+    
     function renderSectionPersonForm(){
         return (                
         <div>
             <h5>Persona a cargo</h5>
-            <h6 className="funcionalidadPendiente">El usuario deberia hacer click en boton, desplegar modal y funcionara como el de agregar registro.. luego seteo la info al formulario y listo.. NO MODIFICAR ESTE COMPONENTE O HABRA QUE ADAPTAR EL DE AGREGAR REGISTRO..</h6>
             <div className="smallInputContainer">
                 <div className="form-floating mb-4">
                     <input type="number" id="person.dni" name="person.dni" className="form-control" {...register("person.dni", {required:true})} disabled/>
                     <label className="form-label" htmlFor="person.dni">Dni</label>
                     {errors.person?.dni?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                 </div>
-                                 
-                <span className="btnModalPerson funcionalidadPendiente">
-                      <PersonModal personBd={personBd} setPersonBd={setPersonBd} setPersonHasUpdates={setPersonHasUpdates}  renderAlert={renderAlert} />
-                </span>
-
                 <div className="form-floating mb-4">
-                    <input type="text" id="person.name" name="person.name" className="form-control" {...register("person.name", {required:true})} />
+                    <input type="text" id="person.name" name="person.name" className="form-control" {...register("person.name", {required:true})} disabled/>
                     <label className="form-label" htmlFor="person.name">Nombre</label>
                     {errors.person?.name?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                 </div>
                 <div className="form-floating mb-4">
-                    <input type="text" id="person.lastName" name="person.lastName" className="form-control" {...register("person.lastName", {required:true})} />
+                    <input type="text" id="person.lastName" name="person.lastName" className="form-control" {...register("person.lastName", {required:true})} disabled />
                     <label className="form-label" htmlFor="person.lastName">Apellido</label>
                     {errors.person?.lastName?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                 </div>
                 <div className="form-floating mb-4">
-                    <input type="number" id="person.phone" name="person.phone" className="form-control" {...register("person.phone", {required:true})} />
+                    <input type="number" id="person.phone" name="person.phone" className="form-control" {...register("person.phone", {required:true})} disabled />
                     <label className="form-label" htmlFor="person.phone">Telefono</label>
                     {errors.person?.phone?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                 </div>
                 <div className="form-floating mb-4">
-                    <input type="number" id="person.emergency_phone" name="person.emergency_phone" className="form-control" {...register("person.emergency_phone", {required:true})} />
-                    <label className="form-label" htmlFor="person.emergency_phone">Telefono</label>
+                    <input type="number" id="person.emergency_phone" name="person.emergency_phone" className="form-control" {...register("person.emergency_phone", {required:true})} disabled />
+                    <label className="form-label" htmlFor="person.emergency_phone">Telefono emergencia</label>
                     {errors.person?.emergency_phone?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                 </div>
                 <div className="form-floating mb-4">
-                    <input type="text" id="person.address" name="person.address" className="form-control" {...register("person.address", {required:true})} />
+                    <input type="text" id="person.address" name="person.address" className="form-control" {...register("person.address", {required:true})} disabled />
                     <label className="form-label" htmlFor="person.address">Direccion</label>
                     {errors.person?.address?.type === "required" && <p className="inputFormError">El campo es requerido</p>}
                 </div>
             </div>
             <div className="form-floating mb-4 textArea">
-                <textarea type="text" id="person.notes" name="person.notes" className="form-control" {...register("person.notes")} />
+                <textarea type="text" id="person.notes" name="person.notes" className="form-control" {...register("person.notes")} disabled />
                 <label className="form-label" htmlFor="person.notes">Notas sobre persona</label>
             </div>
-            <h6 className="funcionalidadPendiente">Aca lo que debo hacer es, como primer paso, poner el dni, y que se levante un modal que muestre todos los datos de la persona,  o vacio si no hay ninguno.. y luego de que se llene o modifique, el boton del modal debe guardar la persona y dejarla seteada</h6>
         </div>
         )
     }
@@ -442,12 +393,12 @@ export default function RecordDetails (){
     function renderDetailsForm(){
         if(pendingPostRequest === true)  return renderPendingPostRequest ()
         return(
-            <form onSubmit={handleSubmit(updateRecord)} className="formRecordDetails">   
-                { renderSectionRecordDetails() /* RECORD details header */}                         
-                { renderSectionPersonForm() /* PERSON details  */}
+            <form onSubmit={handleSubmit(sendForm)} className="formRecordDetails">   
+                { renderSectionRecordDetails() /* RECORD details header */}                  
+                { renderSectionPersonForm()  /* PERSON details  */}                                
                 { record?.license &&  renderSectionRegisteredBoatForm() /* BOAT with license */}                
-                { record?.simpleBoat && renderSectionSimpleBoatForm() /* SIMPLE BOAT without license */}  
-                { (isDirty || changedRecordState )&& <button type="submit" className="btn btn-outline-danger btn-lg funcionalidadPendiente">Editar registro</button>}                
+                { record?.simpleBoat && renderSectionSimpleBoatForm() /* SIMPLE BOAT without license */} 
+                { (isDirty || changedRecordState || personHasUpdates )&& <button type="submit" className="btn btn-outline-danger btn-lg funcionalidadPendiente">Editar registro</button>}                
             </form>
         )
     }
@@ -455,13 +406,16 @@ export default function RecordDetails (){
 
     return (
         <>
-        {showAlert && ( <CustomAlert alertConfig={alert} /> )}
+        {alert && displayAlert(alert)}
 
         <div className="alert alert-secondary addRecordForm">
-            <h4>Detalles del registro </h4>   
-            {loading? renderSpiner() : renderDetailsForm()}   
+            <h4>Detalles del registro </h4>  
+            {loading? renderSpiner() : renderDetailsForm()}              
+            <span className="btnModalPerson">
+                <PersonFormModal personSelected={record?.person} renderAlert={renderAlert}/>
+            </span>  
+
         </div>
-        
         <Link to="/dashboard" className="btn btn-secondary goBackBtn" role="button">Volver</Link>
         </>
     )

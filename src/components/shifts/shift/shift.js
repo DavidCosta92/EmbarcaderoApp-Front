@@ -6,29 +6,19 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../utils/authContext.js";
 import { useForm } from "react-hook-form";
 import { request } from "../../utils/axios_helper.js";
-import CustomAlert from "../../alert/customAlert.js";
+import { AlertContext } from "../../utils/alertContex.js";
 
 export default function Shift (){    
-
+    const { alert, renderAlert, displayAlert } = useContext(AlertContext)
     const { loguedUser,renderPendingPostRequest, getShiftUser, renderSpiner, shift, setShift, loadingShift, setLoadingShift} = useContext(AuthContext)
 
     const { register, formState:{errors, isDirty}, handleSubmit, watch , control, reset} = useForm()
     const [ sendingPostRequest , setSendingPostRequest] = useState(false)
     
-    const [ showAlert, setShowAlert] = useState(false)
-    const [ alert, setAlert] = useState()
-
     useEffect(()=>{
         getShiftUser()
     }, [])
-    
-    function renderAlert(msg, title, style, miliseg){
-        setShowAlert(true)
-        setAlert({msg:msg, title: title, style: style})
-        setTimeout(() => {
-            setShowAlert(false);
-        }, miliseg);
-      }
+
     function sendForm(data){
         data.staff=[loguedUser.dni]
         createShift(data)
@@ -119,8 +109,8 @@ export default function Shift (){
         )
     }
     return (      
-        <>        
-        { showAlert && ( <CustomAlert alertConfig={alert} /> )}
+        <>                
+        {alert && displayAlert(alert)}
         { sendingPostRequest && renderPendingPostRequest()}
         { loadingShift?  renderSpiner() : renderShift()}
         </>

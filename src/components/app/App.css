@@ -1,5 +1,11 @@
+::-webkit-scrollbar {
+    display: none; 
+}
+/* Barra lateral para Firefox  */
+
+
 body{
-    border: 10px solid red;
+    /* border: 10px solid red; */
     box-sizing: border-box;
 }
 .funcionalidadPendiente{

@@ -5,29 +5,41 @@ import { AuthContext } from "../../utils/authContext";
 import { useForm, useFormState } from 'react-hook-form';
 import { request } from "../../utils/axios_helper";
 import { RecordFormContext } from "../../../providers/recordFormProvider";
+import { useLocation } from "react-router-dom";
 
-export default function PersonFormRegister({personBd , setPersonBd , setPersonHasUpdates, renderAlert, handleClose}){
+export default function PersonFormRegister({personSelected , setPersonHasUpdates, renderAlert, handleClose}){
 
+    const path = useLocation();
+    const { register, formState:{isValid, errors, isDirty}, handleSubmit, watch , control, reset} = useForm()
+    const { dirtyFields } = useFormState({ control });
     const { renderSpiner, renderPendingPostRequest} = useContext(AuthContext)
     const {record , setRecord } =  useContext(RecordFormContext)
+    const [ personToShowFromDb, setPersonToShowFromDb] = useState() // al ingresar dni, carga datos de back si es que existe persona
+
+
     const [ loadingPersonForm, setloadingPersonForm ] = useState(false)
     const [ sendingPostRequest , setSendingPostRequest] = useState(false)
     const [ showPersonForm, setShowPersonForm ] = useState(false) // MUESTRA FORMULARIO COMPLETO
-    const [ personToShowFromDb, setPersonToShowFromDb] = useState() // si persona existia previamente en la base de datos, la info se guarda en este estado para mostrar el formulario
-    const [ creatingNewPerson, setCreatingNewPerson] = useState(false) 
-    const { register, formState:{isValid, errors, isDirty}, handleSubmit, watch , control, reset} = useForm()
-    const { dirtyFields } = useFormState({ control });
+
+    const [ creatingNewPerson, setCreatingNewPerson] = useState(false) // para renderizado condicional de boton guardar
     
-    const sendForm = (data) =>{
-        if (isValid) {
-            const formHasChanges = Object.keys(dirtyFields).length >0
-            if(formHasChanges){ // si se crea nuevo formulario, o si se modifico la persona que existia debo pegarle al backedn!                
-                if(personToShowFromDb.id== ""){
+    
+    
+    const sendForm = (data, event) =>{   
+        const formHasChanges = Object.keys(dirtyFields).length >0         
+        
+        // PARA FORMULARIO DE NUEVOS REGISTROS  
+        if (isValid && path.pathname.includes("/addNewRecord")) {// si el modal se despliega para crear un nuevo registro           
+            if(formHasChanges){ // si se crea nuevo formulario, o si se modifico la persona que existia debo pegarle al backedn!   
+                if(personSelected.id== ""){   
+                    console.log("createNewPerson")          
                     createNewPerson(data)
-                } else{                    
+                } else{                       
+                    console.log("updatePerson")          
                     updatePerson(data)
                 }
-            } else if (personToShowFromDb.id  != ""){
+            } else if (personSelected?.id  != ""){  
+                console.log("setear person ya existente, sin cambiar ningun campo")    
                 let recordUpd = {...record}
                 recordUpd.person = data
                 recordUpd.person.isUpdate = false
@@ -35,6 +47,28 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
                 renderAlert("Persona elegida", "Exito", "success",4000)   
                 handleClose()
             }            
+        } 
+        // PARA FORMULARIO DE EDICION DE REGISTROS
+        else if(isValid && path.pathname.includes("recordDetails")){
+            if(formHasChanges){
+                if(personSelected.id == ""){   
+                    console.log("createNewPerson")          
+                    createNewPerson(data)
+                } else {                       
+                    console.log("updatePerson")          
+                    updatePerson(data)
+                }
+            } else {
+                console.log("setear person ya existente, sin cambiar ningun campo")    
+                let recordUpd = {...record}           
+                recordUpd.person = data                
+                recordUpd.person.isUpdate = false
+                recordUpd.person.withOutChange = Object.keys(dirtyFields).length == 0  
+                setRecord(recordUpd)
+                renderAlert("Persona elegida", "Exito", "success",4000)   
+                handleClose()
+            }
+
         }
     }
     const createNewPerson=(data)=>{
@@ -85,11 +119,11 @@ export default function PersonFormRegister({personBd , setPersonBd , setPersonHa
         ) 
     }
 
-    // PRIMERA RECARGA, si no viene persona, cargo datos llamando a back, sino los tomo de los datos enviados..
+    // PRIMERA RECARGA, si viene personSelected, uso los datos para iniciar form.. si no vienen, me quedo a la espera que ponga dni para buscar en backend..
     useEffect(() => {
         let person = null
-        if(personBd?.dni){
-            person = personBd
+        if(personSelected?.dni){
+            person = personSelected
         } else if(record?.person?.dni) {            
             person = record?.person
         }

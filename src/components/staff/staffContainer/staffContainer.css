@@ -1,6 +1,7 @@
 .staffContainer{
     width: 90%;
     padding: 20px;
+    overflow-x: scroll;
 }
 
 .staffContainer span.tableHeader{
@@ -8,3 +9,21 @@
     justify-content: space-between;
     margin-bottom: 30px;
 }
+
+
+.staffContainer{
+    scrollbar-width: thin;
+    scrollbar-color: #1976d2  rgb(255, 255, 255);
+  }
+  /* Barra lateral para  Chrome, Edge, y Safari */
+.staffContainer::-webkit-scrollbar {
+    width: 1px;
+  }
+.staffContainer::-webkit-scrollbar-track {
+    background: var(--text-title-color-dark-blue);
+  }
+.staffContainer::-webkit-scrollbar-thumb {
+    background-color: var(--bg-color-light-blue-050);
+    border-radius: 3px;
+    border: 1px solid var(--text-title-color-light-blue);
+  }

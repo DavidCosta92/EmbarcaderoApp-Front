@@ -22,7 +22,8 @@ export default function BoatForm ({handleClose, renderAlert}){
     const [ licenseToShowFromDb, setLicenseToShowFromDb] = useState(false)
 
 
-    const sendForm = (data) =>{
+    const sendForm = (data, event) =>{
+        event.preventDefault()
         if (isValid){
             let recordUpd = {...record}
             if(data?.hasLicense == true){
