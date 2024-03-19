@@ -10,14 +10,65 @@ import { AlertContext } from "../../utils/alertContex.js";
 
 export default function Shift (){    
     const { alert, renderAlert, displayAlert } = useContext(AlertContext)
-    const { loguedUser,renderPendingPostRequest, getShiftUser, renderSpiner, shift, setShift, loadingShift, setLoadingShift} = useContext(AuthContext)
+    const { loguedUser,renderPendingPostRequest, getShiftUser, renderSpiner, shift, setShift, loadingShift, setLoadingShift, shiftHasUpdates} = useContext(AuthContext)
 
     const { register, formState:{errors, isDirty}, handleSubmit, watch , control, reset} = useForm()
     const [ sendingPostRequest , setSendingPostRequest] = useState(false)
     
+    /*
     useEffect(()=>{
         getShiftUser()
     }, [])
+    */
+        
+    useEffect(()=>{
+        getShiftUser()        
+    }, [shiftHasUpdates])
+
+    function renderShift (){
+        if(shift !== null ){
+            const fecha = new Date(shift?.date)
+            return(
+                <div className="actualShift">
+                    <div className="header">
+                        <h5 className="">Datos de la guardia {shift.dam}</h5>      
+                        <div>
+                            <span>
+                                <ul>
+                                    <li> ID: {shift.id}</li>
+                                    <li> Fecha: {fecha.toLocaleDateString()}</li>
+                                    <li> Estado: {shift.close === null && "Activo"}</li>
+                                </ul>    
+                            </span>     
+                        </div>
+                        <span className="notes">                            
+                            <p> Notas: {shift.notes}</p>
+                        </span>                                       
+                    </div>          
+                    <RecordsContainer records={shift.records}/>
+                    <StaffContainer/>
+                    
+                    {shift.close === null && (
+                        <div className="buttons">
+                            <a href="#" className="btn btn-warning btn-lg" tabIndex="-1" role="button" aria-disabled="true">Btn EDITAR guardia, lleva a pantalla para editar.. </a> 
+                                                   
+                            <a href="#" className="btn btn-danger btn-lg" tabIndex="-1" role="button" aria-disabled="true">Btn cerrar guardia, previo modal para confirmar (pendiente) </a> 
+                        </div>
+                    )}
+                    
+                </div>
+            )
+        } else{
+            return(
+                <div className="actualShift">
+                    <div className="header">
+                        <h5 className="">No hay guardia cargada para el usuario</h5>                 
+                    </div>      
+                    {renderFormCreateShift()}
+                </div>
+            )
+        }
+    }
     function sendForm(data){
         data.staff=[loguedUser.dni]
         createShift(data)
@@ -42,50 +93,6 @@ export default function Shift (){
             }
         )   
     }
-    function renderShift (){
-        if(shift !== null ){
-            const fecha = new Date(shift?.date)
-            return(
-                <div className="actualShift">
-                    <div className="header">
-                        <h5 className="">Datos de la guardia {shift.dam}</h5>      
-                        <div>
-                            <span>
-                                <ul>
-                                    <li> ID: {shift.id}</li>
-                                    <li> Fecha: {fecha.toLocaleDateString()}</li>
-                                    <li> Estado: {shift.close === null && "Activo"}</li>
-                                </ul>    
-                            </span>     
-                        </div>
-                        <span className="notes">                            
-                            <p> Notas: {shift.notes}</p>
-                        </span>                                       
-                    </div>          
-                    <RecordsContainer records={shift.records}/>
-                    <StaffContainer staff = {shift.staff}/>
-                    
-                    {shift.close === null && (
-                        <div className="buttons">
-                            <a href="#" className="btn btn-warning btn-lg" tabIndex="-1" role="button" aria-disabled="true">Btn EDITAR guardia, lleva a pantalla para editar.. </a> 
-                                                   
-                            <a href="#" className="btn btn-danger btn-lg" tabIndex="-1" role="button" aria-disabled="true">Btn cerrar guardia, previo modal para confirmar (pendiente) </a> 
-                        </div>
-                    )}
-                    
-                </div>
-            )
-        } else{
-            return(
-                <div className="actualShift">
-                    <div className="header">
-                        <h5 className="">No hay guardia cargada para el usuario</h5>                 
-                    </div>      
-                    {renderFormCreateShift()}
-                </div>
-            )
-        }
-    }
     function renderFormCreateShift(){
         return(
             <form onSubmit={handleSubmit(sendForm)} >  
@@ -109,7 +116,7 @@ export default function Shift (){
     }
     return (      
         <>                
-        {alert && displayAlert(alert)}
+        { alert && displayAlert(alert)}
         { sendingPostRequest && renderPendingPostRequest()}
         { loadingShift?  renderSpiner() : renderShift()}
         </>

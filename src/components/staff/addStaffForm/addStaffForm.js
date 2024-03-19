@@ -10,7 +10,7 @@ import { Badge, Chip } from "@mui/material";
 export default function AddStaffForm({handleClose}){
     const { register, formState:{isValid, errors, isDirty}, handleSubmit, watch , control, reset} = useForm()
     const { dirtyFields } = useFormState({ control });
-    const { renderSpiner, renderPendingPostRequest, getShiftUser, shift, setShift} = useContext(AuthContext)
+    const { renderSpiner, renderPendingPostRequest, getShiftUser, shift, setShift, setShiftHasUpdates} = useContext(AuthContext)
     const { alert, renderAlert, displayAlert } = useContext(AlertContext)  
 
     const [ loadingUserForm, setLoadingUserForm ] = useState(false)
@@ -29,7 +29,7 @@ export default function AddStaffForm({handleClose}){
                 renderAlert("Usuario agregado!", "Exito", "success",4000)   
                 handleClose()
                 setUserStaff(false)
-                // setShift(response) => TODO debo ver como actualizar el listado de staff!
+                setShiftHasUpdates(true)
             })
             .catch((error) => {    
                 if(error.response){
@@ -65,9 +65,9 @@ export default function AddStaffForm({handleClose}){
             })
             .catch((error) => {    
                 if(error.response?.status == 404){
-                    renderAlert(`Error ${error.response?.status}: ${error.response?.data?.message}`, "Error", "error",5000)  
+                    renderAlert(`Error ${error.response?.status}: Usuario NO ENCONTRADO`, "Error", "error",5000)  
                 } else if(error.response?.status == 406){
-                    renderAlert(`Error ${error.response?.status}: ${error.response?.data?.message}`, "Error", "error",5000)  
+                    renderAlert(`Error ${error.response?.status}: Usuario NO ES GUARDAVIDA`, "Error", "warning",5000)  
                 }
                 setUserStaff(null)
                 setShowUserForm(false)

@@ -27,3 +27,19 @@
     border-radius: 3px;
     border: 1px solid var(--text-title-color-light-blue);
   }
+
+  .staffContainer .staffActionsTHead{
+    text-align: center;
+
+  }
+  .staffContainer .staffActions{
+    display: flex;
+    justify-content: space-around;
+
+  }
+  .staffContainer .staffActions .spinner p.alert-heading{
+    display: none;
+  }
+  .staffContainer .staffActions .spinner div.alert{
+    background-color: rgba(255, 0, 0, 0.37);
+  }

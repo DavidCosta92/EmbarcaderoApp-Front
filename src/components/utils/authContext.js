@@ -1,10 +1,8 @@
 // @ts-nocheck
 import React, { useState , useEffect} from 'react'
-import { Alert, Box, CircularProgress, LinearProgress } from "@mui/material";
+import { Box, CircularProgress, LinearProgress } from "@mui/material";
 import { request} from './axios_helper';
 import { useNavigate } from "react-router-dom";
-import { Checklist } from '@mui/icons-material';
-import AlertTitle from '@mui/material/AlertTitle';
 
 const AuthContext = React.createContext();
 
@@ -12,6 +10,7 @@ const AuthProvider =({children})=>{
     const navigate = useNavigate()
     const [ loguedUser, setLoguedUser] = useState(false)
     const [ shift, setShift ] = useState(null)
+    const [ shiftHasUpdates, setShiftHasUpdates ] = useState(false)
     const [ loadingShift, setLoadingShift ] = useState()
     const [ loadingUser, setLoadingUser ] = useState()    
     
@@ -22,6 +21,10 @@ const AuthProvider =({children})=>{
     useEffect(()=>{
         getShiftUser()
     }, [loguedUser])
+
+    useEffect(()=>{
+        getShiftUser()
+    }, [shiftHasUpdates])
 
     function getShiftUser(){     
         setLoadingShift(true)      
@@ -35,11 +38,12 @@ const AuthProvider =({children})=>{
                 setLoadingShift(false)          
             })
             .catch((error) => {
-                if(error.response?.status == 404){       
+                if(error.response?.status === 404){       
                     setShift(null)           
                     setLoadingShift(false)  
                 }
         })
+        setShiftHasUpdates(false)
     }
     function getAuthToken(){
         return window.localStorage.getItem("auth_token")
@@ -120,11 +124,10 @@ const AuthProvider =({children})=>{
         return(
             <div className="spinner"> 
                 <Box sx={{ display: 'flex' }}  className="">
-                <div class="alert alert-success" role="alert">
-                    <h4 className="alert-heading">Enviando peticion..</h4>
-                    <LinearProgress color="success" />
-                </div>
-                    
+                    <div class="alert " role="alert">
+                        <p className="alert-heading">Enviando peticion..</p>
+                        <LinearProgress color="inherit" />
+                    </div>                    
                 </Box>
             </div>           
         )
@@ -147,6 +150,8 @@ const AuthProvider =({children})=>{
         setLoadingShift,
         shift, 
         setShift,
+        shiftHasUpdates, 
+        setShiftHasUpdates,
         getShiftUser,
         getAuthToken,
         setAuthHeader,
