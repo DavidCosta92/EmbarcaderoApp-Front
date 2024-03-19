@@ -6,7 +6,6 @@ import {  request } from "../../utils/axios_helper.js";
 import { AuthContext } from "../../utils/authContext.js";
 import { useForm, useFormState } from 'react-hook-form';
 import CustomAlert from "../../alert/customAlert.js";
-import PersonModal from "../../modals/persons/ELIMINAR---personModal.js";
 import { AlertContext } from "../../utils/alertContex.js";
 import PersonFormModal from "../../modals/persons/personFormModal.js";
 import { RecordFormContext } from "../../../providers/recordFormProvider.js";

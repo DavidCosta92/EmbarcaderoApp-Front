@@ -31,7 +31,7 @@ export default function PersonFormRegister({personSelected , setPersonHasUpdates
         // PARA FORMULARIO DE NUEVOS REGISTROS  
         if (isValid && path.pathname.includes("/addNewRecord")) {// si el modal se despliega para crear un nuevo registro           
             if(formHasChanges){ // si se crea nuevo formulario, o si se modifico la persona que existia debo pegarle al backedn!   
-                if(personSelected.id== ""){   
+                if(personSelected?.id== "" || personToShowFromDb?.id ==""){   
                     console.log("createNewPerson")          
                     createNewPerson(data)
                 } else{                       

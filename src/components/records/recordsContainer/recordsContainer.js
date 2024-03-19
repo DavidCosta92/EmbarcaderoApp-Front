@@ -9,10 +9,10 @@ import { Badge } from "@mui/material";
 
 export default function RecordsContainer({records}){      
 
-    if(records.length !=0){
+    if(records?.length !=0){
         let activePersons = 0
         let activeBoats = 0     
-            records.map(rec=>{
+        records?.map(rec=>{
                 if(rec.recordState == "ACTIVO"){
                     activePersons += rec.numberOfGuests +1 // invitados + timonel
                     activeBoats +=1
@@ -54,7 +54,7 @@ export default function RecordsContainer({records}){
                         </tr>
                     </thead>
                     <tbody>
-                        { records.map( (rec) => {
+                        { records?.map( (rec) => {
                             return(
                                 <Record record={rec} key={rec.id}/>
                             )}) }

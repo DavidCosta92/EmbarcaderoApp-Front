@@ -18,7 +18,6 @@ export default function Shift (){
     useEffect(()=>{
         getShiftUser()
     }, [])
-
     function sendForm(data){
         data.staff=[loguedUser.dni]
         createShift(data)

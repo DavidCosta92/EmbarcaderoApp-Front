@@ -1,4 +1,5 @@
 // @ts-nocheck
+import AddStaffModal from "../addStaff/addStaffModal"
 import "./staffContainer.css"
 
 export default function StaffContainer({staff}){
@@ -6,7 +7,9 @@ export default function StaffContainer({staff}){
         <div className="alert alert-secondary staffContainer">
             <span className="tableHeader">
                 <h4>Personal</h4>
-                <a href="#" className="btn btn-success btn-lg" tabIndex="-1" role="button" aria-disabled="true">Link Agregar nuevo staff (pendiente) </a>
+                <span className="btnAddStaff">
+                    <AddStaffModal/>
+                </span>
             </span>
 
             <table className="table table-secondary table-striped">
@@ -23,7 +26,7 @@ export default function StaffContainer({staff}){
                     </tr>
                 </thead>
                 <tbody>
-                    { staff.map( (member) => {
+                    { staff?.map( (member) => {
                         return(
                             <tr key={member.id}>
                                 <th scope="row">{member.id}</th>

@@ -1,0 +1,13 @@
+.labelDni{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.labelDni .chip{
+    margin:5px 20px;
+}
+.btnFormContainer{    
+    display: flex;
+    justify-content: center;
+}
