@@ -49,8 +49,11 @@ export default function Shift (){
                     <StaffContainer/>
                     
                     {shift.close === null && (
-                        <div className="buttons">
+                        <div className="buttons">                            
+                            <a href="#" className="btn btn-info btn-lg" tabIndex="-1" role="button" aria-disabled="true">Btn Enviar reporte, que abra modal, poner email y envia pdf </a> 
+                                                   
                             <a href="#" className="btn btn-warning btn-lg" tabIndex="-1" role="button" aria-disabled="true">Btn EDITAR guardia, lleva a pantalla para editar.. </a> 
+                            <a href="#" className="btn btn-info btn-lg" tabIndex="-1" role="button" aria-disabled="true">Btn AGREGAR OTRAS COSAS, COMBUSTIBLE, CAMINONETAS EMBAR, ECTS </a> 
                                                    
                             <a href="#" className="btn btn-danger btn-lg" tabIndex="-1" role="button" aria-disabled="true">Btn cerrar guardia, previo modal para confirmar (pendiente) </a> 
                         </div>
