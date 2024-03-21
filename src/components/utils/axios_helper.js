@@ -7,7 +7,7 @@ const AWS_URL = "http://embarcadero-vacio-env.eba-z4dzvsrp.us-east-1.elasticbean
 axios.defaults.baseURL = LOCAL_URL
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
-export const request = (method, url, data) =>{
+export const request = (method, url, data, responseType) =>{
     let headers = {}
     const token = window.localStorage.getItem("auth_token")
     if(token !== null && token !== "null"){
@@ -17,6 +17,7 @@ export const request = (method, url, data) =>{
         method : method,
         url : url,
         headers : headers,
-        data : data
+        data : data,
+        responseType: responseType
     })
 }

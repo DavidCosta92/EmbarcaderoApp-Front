@@ -7,6 +7,7 @@ import { AuthContext } from "../../utils/authContext.js";
 import { useForm } from "react-hook-form";
 import { request } from "../../utils/axios_helper.js";
 import { AlertContext } from "../../utils/alertContex.js";
+import { Button } from "@mui/material";
 
 export default function Shift (){    
     const { alert, renderAlert, displayAlert } = useContext(AlertContext)
@@ -24,6 +25,36 @@ export default function Shift (){
     useEffect(()=>{
         getShiftUser()        
     }, [shiftHasUpdates])
+
+    function createShiftReport(){
+        setSendingPostRequest(true)
+        request(
+            "GET",
+            `shifts/shiftResume/${shift.id}`,
+            {},
+            'blob') // manejar la respuesta como Blob, axios ya me lo deja como blob
+            .then((response) => {                
+                setSendingPostRequest(false)      
+                console.log(response.data) // axios ya me lo deja como blob
+
+                // Crear un enlace, agregarlo a doc y simular un clic para descargar el archivo
+                const url = window.URL.createObjectURL(response.data);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `Reporte guardia ${shift.id} - ${Date.now()}.pdf`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                renderAlert("Reporte generado!", "Exito", "success",4000)   
+            })
+            .catch((error) => {
+                console.log ("***********>>> "+error)    
+                setSendingPostRequest(false) 
+                renderAlert(`Error inesperado: ${error}`, "Error", "error",4000)   
+            }
+        )
+
+    }
 
     function renderShift (){
         if(shift !== null ){
@@ -51,6 +82,8 @@ export default function Shift (){
                     {shift.close === null && (
                         <div className="buttons">                            
                             <a href="#" className="btn btn-info btn-lg" tabIndex="-1" role="button" aria-disabled="true">Btn Enviar reporte, que abra modal, poner email y envia pdf </a> 
+
+                            <Button variant="outlined"  onClick={createShiftReport}>Crear reporte</Button>
                                                    
                             <a href="#" className="btn btn-warning btn-lg" tabIndex="-1" role="button" aria-disabled="true">Btn EDITAR guardia, lleva a pantalla para editar.. </a> 
                             <a href="#" className="btn btn-info btn-lg" tabIndex="-1" role="button" aria-disabled="true">Btn AGREGAR OTRAS COSAS, COMBUSTIBLE, CAMINONETAS EMBAR, ECTS </a> 

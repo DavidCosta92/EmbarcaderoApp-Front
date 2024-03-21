@@ -14,7 +14,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useState } from 'react';
 
 export default function DialogDeleteStaff({shiftId, member}) {
-    const { renderAlert } = React.useContext(AlertContext)  
+    const { renderAlert } = useContext(AlertContext)  
     const { renderPendingPostRequest, setShiftHasUpdates} = useContext(AuthContext)
   const [open, setOpen] = useState(false);
 

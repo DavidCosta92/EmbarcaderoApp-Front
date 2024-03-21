@@ -125,6 +125,7 @@ export default function AddNewRecord(){
           delete formData.license.registeredBoat
         }
 
+        console.log(formData)
 
         setPendingPostRequest(true)
         request(
@@ -135,7 +136,6 @@ export default function AddNewRecord(){
               setPendingPostRequest(false)
               if(response.status ===201){
                 renderAlert("Registro creado!", "Exito", "success",4000)    
-                setRecord({}) // Limpio record para que campos boat y person queden limpios
                 reset()// limpiar form, campos simples
                 
                 // TODO aca se redirige a la pagina, pero se alcanza a ver la notificacion??? 
@@ -144,6 +144,7 @@ export default function AddNewRecord(){
                 // TODO aca se redirige a la pagina, pero se alcanza a ver la notificacion??? 
                 
                 navigate("/dashboard")
+                setRecord({}) // Limpio record para que campos boat y person queden limpios
                 
                 // TODO aca se redirige a la pagina, pero se alcanza a ver la notificacion??? 
                 // TODO aca se redirige a la pagina, pero se alcanza a ver la notificacion??? 
