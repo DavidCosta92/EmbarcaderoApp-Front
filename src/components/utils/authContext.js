@@ -13,6 +13,8 @@ const AuthProvider =({children})=>{
     const [ shiftHasUpdates, setShiftHasUpdates ] = useState(false)
     const [ loadingShift, setLoadingShift ] = useState()
     const [ loadingUser, setLoadingUser ] = useState()    
+    const [ sendingPostRequest , setSendingPostRequest] = useState(false)
+    const [ error , setError] = useState(false)
     
     useEffect(()=>{
         setUserFromSessionStorage()
@@ -27,23 +29,25 @@ const AuthProvider =({children})=>{
     }, [shiftHasUpdates])
 
     function getShiftUser(){     
-        setLoadingShift(true)      
-        request(
-            "GET",
-            `shifts/user/${loguedUser.id}`,
-            {})
-            .then(
-            (response) => {             
-                setShift(response.data) 
-                setLoadingShift(false)          
+        if(loguedUser){
+            setLoadingShift(true) 
+            request(
+                "GET",
+                `shifts/user/${loguedUser.id}`,
+                {})
+                .then(
+                (response) => {             
+                    setShift(response.data) 
+                    setLoadingShift(false)          
+                })
+                .catch((error) => {
+                    if(error.response?.status === 404){       
+                        setShift(null)           
+                        setLoadingShift(false)  
+                    }
             })
-            .catch((error) => {
-                if(error.response?.status === 404){       
-                    setShift(null)           
-                    setLoadingShift(false)  
-                }
-        })
-        setShiftHasUpdates(false)
+            setShiftHasUpdates(false)            
+        }     
     }
     function getAuthToken(){
         return window.localStorage.getItem("auth_token")
@@ -58,23 +62,28 @@ const AuthProvider =({children})=>{
     function setAuthToken(token){
         return window.localStorage.setItem("auth_token", token)
     }
+
     function setUserFromSessionStorage() {   
-        request(
-            "GET",
-            "auth/userDetails",
-            {})
-            .then((response) => {                       
-                setLoguedUser(response.data)
-                setLoadingUser(false)                
-            })
-            .catch((error) => {
-                console.log ("***********>>> "+error)  
-                setAuthHeader(null);  
-                setShift(null)            
-            }
-        )
+        if(getAuthToken()){
+            request(
+                "GET",
+                "auth/userDetails",
+                {})
+                .then((response) => {                       
+                    setLoguedUser(response.data)
+                    setLoadingUser(false)                
+                })
+                .catch((error) => {
+                    console.log ("***********>>> "+error)  
+                    setAuthHeader(null);  
+                    setShift(null)            
+                }
+            )
+        }
+
     }
-    function loginUser(usernameAtt, passwordAtt){        
+    function loginUser(usernameAtt, passwordAtt){    
+        setSendingPostRequest(true)      
         request(
             "POST" ,
             "auth/login",                
@@ -82,17 +91,23 @@ const AuthProvider =({children})=>{
                 username : usernameAtt , 
                 password : passwordAtt
             } )
-            .then( (resp) =>{           
+            .then((resp) =>{     
                 setLoguedUser(resp.data)
                 setAuthToken(resp.data.token)  
+                setSendingPostRequest(false)  
                 navigate("/dashboard") 
             })
             .catch( (error) =>{  
+                if(error.response.status == 400){
+                    setError({status: error.response.status, message: "Credenciales erroneas, verifica datos!"})
+                }
                 setLoguedUser(false)   
+                setSendingPostRequest(false)  
                 setAuthHeader(null);  
             })
     }
     function registerUser (data){        
+        setSendingPostRequest(true)  
         request(
             "POST" ,
             "auth/register",
@@ -106,18 +121,28 @@ const AuthProvider =({children})=>{
                 dni : data.dni,
                 email : data.email
             } )
-        .then( (resp) =>{ 
-            setAuthHeader(resp.token);
-            setAuthToken(resp.token)
-            setLoguedUser(resp)            
+        .then( (resp) =>{   
+            if(resp.data.sendStatus !== "OK"){
+                setError({status: 500, message: `Registro exitoso!, sin embargo ocurrio un error al enviar email: ${resp.data.sendStatus}`})
+            }    
+            setAuthHeader(resp.data.token);
+            setAuthToken(resp.data.token)
+            setLoguedUser(resp.data)          
+            setSendingPostRequest(false)  
             navigate("/dashboard")  
         })
         .catch( (error) =>{
-            console.log(" ======== error >>>>"+error) 
+            if(error.response.status == 409){
+                setError({status: error.response.status, message: "Datos existentes, revisa los datos ingresados o bien inicia sesion"})
+            } else if(error.response.status == 406){
+                setError({status: error.response.status, message: error.response.data.message})
+            }    
+            setSendingPostRequest(false)  
             setAuthHeader(null);
         })
     }
     function logout(){
+        setLoguedUser(false)
         return window.localStorage.removeItem("auth_token")
     }
     function renderPendingPostRequest(){
@@ -161,9 +186,13 @@ const AuthProvider =({children})=>{
         loginUser,
         registerUser,
         logout,
+        sendingPostRequest , 
+        setSendingPostRequest,
         renderPendingPostRequest,       
-        renderSpiner
-    }
+        renderSpiner,
+        error , 
+        setError
+        }
     return (
         <AuthContext.Provider value={data}>
             {children}

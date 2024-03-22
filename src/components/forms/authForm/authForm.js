@@ -1,13 +1,13 @@
 // @ts-nocheck
 import './authForm.css'
 
-import { useContext , useState} from "react";
+import { useContext , useEffect, useState} from "react";
 import { AuthContext } from '../../utils/authContext';
 import LoginForm from '../login/loginForm';
 import RegisterForm from '../register/registerForm';
 
 export default function AuthForm(){
-  const { loguedUser} = useContext(AuthContext)
+  const { loguedUser } = useContext(AuthContext)
   const [ activeForm , setActiveForm] = useState("login")
 
   function renderAuthForm(){

@@ -1,0 +1,9 @@
+.formSendEmail{
+    text-align: center;
+}
+.formSendEmail div{
+    height: 50px;   
+}
+.formSendEmail div input{
+    margin-bottom: 5px;
+}
