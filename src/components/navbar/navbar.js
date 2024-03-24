@@ -20,7 +20,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SailingIcon from '@mui/icons-material/Sailing';
 
-const pages = ['Dashboard', 'Matriculas', 'Personas', 'Algo mas?'];
+const pages = ['Dashboard', 'Matriculas', 'Timoneles', 'Guardavidas'];
 const settings = ['Perfil', 'Logout'];
 
 export default function Navbar(){
@@ -56,11 +56,11 @@ export default function Navbar(){
             case 'Matriculas':
                 navigate("/licenses")
                 break
-            case 'Personas':
-                navigate("/persons")
+            case 'Timoneles':
+                navigate("/helmsmans")
                 break
-            case 'Algo mas?':
-                navigate("/dashboard")
+            case 'Guardavidas':
+                navigate("/lifeguards")
                 break
         }
     }
@@ -134,7 +134,7 @@ export default function Navbar(){
                   display: { xs: 'block', md: 'none' },
                 }}
               >
-                {pages.map((page) => (
+                {pages.map((page) => (                  
                   <MenuItem key={page} onClick={()=>navMenuNavigateTo(page)}>
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>

@@ -36,7 +36,7 @@ export default function Record ({record}){
             <td>{record.car.toUpperCase()}</td>
             <td>{record.notes}</td>   
             <td>
-                <Link to={`/recordDetails/${record.id}`} className="btn btn-outline-success" role="button">Ver mas</Link>
+                <Link to={`/record/${record.id}`} className="btn btn-outline-success" role="button">Ver mas</Link>
             </td>  
         </tr>
     )

@@ -18,8 +18,11 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { request } from '../../utils/axios_helper';
+import { Link, useNavigate } from "react-router-dom";
+import { TableHead } from "@mui/material";
 
-function TablePaginationActions(props) {
+function TablePaginationActions(props) {    
+  
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
 
@@ -115,7 +118,7 @@ export default function LicensesList() {
     const [totalPages, setTotalPages] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [emptyRows, setEmptyRows] = React.useState(0);
-
+    const navigate = useNavigate()
     
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -175,37 +178,59 @@ export default function LicensesList() {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table tableLicensesList">
+      <TableHead>
+          <TableRow>
+            <TableCell align="center">Matricula</TableCell>
+            <TableCell align="center">Estado</TableCell>
+            <TableCell align="center">Nombre, Apellido - Dni</TableCell>
+            <TableCell align="center">Tel - Tel Emergencia</TableCell>
+            <TableCell align="center">Embarcacion, casco y Capacidad</TableCell>
+            <TableCell align="center">Nombre fantasia</TableCell>
+            <TableCell align="center">Tipo motor</TableCell>
+            <TableCell align="center">Notas</TableCell>
+            <TableCell align="center">Acciones</TableCell>
+          </TableRow>
+        </TableHead>
         <TableBody>          
           {rows ? rows.map((row) => (            
-            <TableRow key={row.licenseCode} sx={{ height: '100px' }}>
+            <TableRow key={row.licenseCode} sx={{ height: '100px' }} align="center">
               <TableCell component="th" scope="row">
                 {row.licenseCode}
               </TableCell>
-              <TableCell style={{ width: 160 }} align="center">
+              <TableCell  align="center">
                 {row.licenseState_enum}
               </TableCell>
-              <TableCell style={{ width: 160 }} align="center">
-                {`${row.owner?.name}, ${row.owner?.lastName}, dni: ${row.owner?.dni}`}
+              <TableCell  align="center">
+                {`${row.owner?.name.toUpperCase()}, ${row.owner?.lastName.toUpperCase()}`}
+                <p>{row.owner?.dni}</p>
               </TableCell>
 
-              <TableCell style={{ width: 160 }} align="center">
-                {`${row.owner?.phone} ${row.owner?.emergency_phone}`}
+              <TableCell  align="center">
+                <p>{row.owner?.phone}</p>
+                <p>{row.owner?.emergency_phone}</p>
               </TableCell>              
 
-              <TableCell style={{ width: 160 }} align="center">
-                {`${row.registeredBoat?.typeLicencedBoat_enum}, ${row.registeredBoat?.hull}, Cap: ${row.registeredBoat?.capacity}`}
+              <TableCell  align="center">
+                <p>{`${row.registeredBoat?.typeLicencedBoat_enum} - ${row.registeredBoat?.hull}`}</p>
+                <p>{row.registeredBoat?.capacity}</p>
               </TableCell>
 
-              <TableCell style={{ width: 160 }} align="center">
+              <TableCell  align="center">
                 {`${row.registeredBoat?.name}`} 
               </TableCell>             
               
-              <TableCell style={{ width: 160 }} align="center">
-                {`${row.registeredBoat?.engine?.engineType_enum}`} 
+              <TableCell  align="center">
+                {row.registeredBoat?.engine?.engineType_enum ? (row.registeredBoat?.engine?.engineType_enum) : ("Sin motor")}
               </TableCell>
 
-              <TableCell style={{ width: 160 }} align="center">
+              <TableCell  align="center">
                 {row.notes}
+              </TableCell>
+              
+              <TableCell  align="center">
+                <button  className="btn btn-outline-success" onClick={()=> navigate(`/licenses/${row.id}`)} >                
+                    Ver mas
+                </button> 
               </TableCell>
               
             </TableRow>

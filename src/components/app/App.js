@@ -16,6 +16,9 @@ import AddNewRecord from '../records/addRecord/addNewRecord'
 import UserProfile from '../userProfile/userProfile'
 import AlertProvider from '../utils/alertContex'
 import LicensesContainer from '../licenses/licensesContainer'
+import LicenseDetails from '../licenses/licenseDetails/licenseDetails'
+import LifeguardsContainer from '../lifeguards/lifeguardsContainer/lifeguardsContainer'
+import HelmsmansContainer from '../../helmsmansContainer/helmsmansContainer'
 
 
 export default function App (){
@@ -39,14 +42,17 @@ export default function App (){
                             <Route element={<ProtectedRoute />}> 
                                 <Route path='/dashboard' element={<AuthContent/>} />
                                 <Route path='/licenses' element={<LicensesContainer/>}/>   
-                                <Route path='/persons' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}   
+                                <Route path='/licenses/:id' element={<LicenseDetails/>}/>  
+                                <Route path='/lifeguards' element={<LifeguardsContainer/>}/>   
+                                <Route path='/helmsmans' element={<HelmsmansContainer/>} /> 
+
                                 <Route path='/userProfile' element={<UserProfile/>} />   
                             </Route>
 
                             {/* RUTAS AUTHENTICADOS && ROLES NAUTICOS  o ADMIN */}
                             <Route element={<ProtectedRoute onlyRoles={[user_role.lifeguard,user_role.admin]} />}> 
                                     <Route path='/addNewRecord' element={<AddNewRecord/>} />
-                                    <Route path='/recordDetails/:id' element={<RecordDetails/>}/>   
+                                    <Route path='/record/:id' element={<RecordDetails/>}/>   
                             </Route>
 
                             {/* RUTAS AUTHENTICADOS && ROL OFICINA o ADMIN */}
