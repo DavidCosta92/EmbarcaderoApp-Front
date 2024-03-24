@@ -95,6 +95,7 @@ const AuthProvider =({children})=>{
                 setLoguedUser(resp.data)
                 setAuthToken(resp.data.token)  
                 setSendingPostRequest(false)  
+                setError(false)
                 navigate("/dashboard") 
             })
             .catch( (error) =>{  
@@ -129,6 +130,7 @@ const AuthProvider =({children})=>{
             setAuthToken(resp.data.token)
             setLoguedUser(resp.data)          
             setSendingPostRequest(false)  
+            setError(false)
             navigate("/dashboard")  
         })
         .catch( (error) =>{

@@ -36,15 +36,14 @@ export default function SendReportModal(){
     };
 
     function sendEmail(data){
-        setSendingPostRequest(true)
-        console.log("Enviando email a... " + data.email + shift.id)        
+        setSendingPostRequest(true)    
         request(
             "GET",
             `shifts/shiftResume/${shift.id}/${data.email}`,
             {})
             .then((response) => {      
               setSendingPostRequest(false)
-              if(response.status ===202){
+              if(response?.status ===202){
                 renderAlert(`Email enviado a ${data.email}` , "Exito", "success",4000)   
                 reset()
                 handleClose()                 
@@ -53,8 +52,9 @@ export default function SendReportModal(){
             .catch(
             (error) => {
                 setSendingPostRequest(false)
-                if(error.response){                
-                  renderAlert(`${error.response.status}: ${error.response.data.message} - Cod: ${error.response.data.internalCode}`, "Error", "warning",10000)
+                renderAlert(`${error}   > aaaaa!`, "Error", "warning",10000)
+                if(error.response?.status == 500){                
+                  renderAlert(`${error.response.status}: Error interno al enviar email, revisa los datos e itenta nuevamente!`, "Error", "warning",10000)
                 } else {
                   renderAlert(`Error inesperado ${error}`, "Error", "warning",10000)
                 }

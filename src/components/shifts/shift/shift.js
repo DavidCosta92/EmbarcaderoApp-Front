@@ -10,33 +10,30 @@ import { AlertContext } from "../../utils/alertContex.js";
 import { Button } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
 import SendReportModal from "../../modals/sendReport/sendReport.js";
+import CloseShiftModal from "../../modals/closeShift/closeShiftModal.js";
 
 export default function Shift (){    
     const { alert, renderAlert, displayAlert } = useContext(AlertContext)
-    const { loguedUser,renderPendingPostRequest, getShiftUser, renderSpiner, shift, setShift, loadingShift, setLoadingShift, shiftHasUpdates} = useContext(AuthContext)
+    const { loguedUser,renderPendingPostRequest, getShiftUser, renderSpiner, shift, setShift, loadingShift, setLoadingShift, shiftHasUpdates, setShiftHasUpdates} = useContext(AuthContext)
 
     const { register, formState:{errors, isDirty}, handleSubmit, watch , control, reset} = useForm()
     const [ sendingPostRequest , setSendingPostRequest] = useState(false)
     
-    /*
-    useEffect(()=>{
-        getShiftUser()
-    }, [])
-    */
-        
+    const [ downloadRequest , setDownloadRequest] = useState(false)
+            
     useEffect(()=>{
         getShiftUser()        
     }, [shiftHasUpdates])
 
-    function createShiftReport(){
-        setSendingPostRequest(true)
+    function downloadShiftReport(){
+        setDownloadRequest(true)
         request(
             "GET",
             `shifts/shiftResume/${shift.id}`,
             {},
             'blob') // manejar la respuesta como Blob, axios ya me lo deja como blob
             .then((response) => {                
-                setSendingPostRequest(false)      
+                setDownloadRequest(false)      
                 // Crear un enlace, agregarlo a doc y simular un clic para descargar el archivo
                 const url = window.URL.createObjectURL(response.data);
                 const link = document.createElement('a');
@@ -49,13 +46,23 @@ export default function Shift (){
             })
             .catch((error) => {
                 console.log ("***********>>> "+error)    
-                setSendingPostRequest(false) 
+                setDownloadRequest(false) 
                 renderAlert(`Error inesperado: ${error}`, "Error", "error",4000)   
             }
         )
-
     }
-
+    function renderButtonDownloadShiftReport(){
+        return(
+            <span onClick={downloadShiftReport} className="btn btn-outline-success ">
+                <p>Descargar resumen</p>
+                {downloadRequest? (
+                    <div className="buttonRequestContainer">
+                        {renderPendingPostRequest()}
+                    </div>
+                ) : <DownloadIcon  sx={{ fontSize: 40 }} /> }                                     
+            </span>    
+        )
+    }    
     function renderShift (){
         if(shift !== null ){
             const fecha = new Date(shift?.date)
@@ -80,24 +87,18 @@ export default function Shift (){
                     <StaffContainer/>
                     
                     {shift.close === null && (
-                        <div className="buttons">       
-                            <span onClick={createShiftReport} className="btn btn-outline-success ">
-                                <p>Descargar resumen</p>
-                                <DownloadIcon  sx={{ fontSize: 40 }} />                      
-                            </span>              
+                        <div className="buttons">    
+                            {renderButtonDownloadShiftReport()}             
                             <SendReportModal/>        
-                            <span onClick={createShiftReport} className="btn btn-outline-success funcionalidadPendiente">
+                            <span onClick={downloadShiftReport} className="btn btn-outline-success funcionalidadPendiente">
                                 <p>Btn EDITAR guardia, lleva a pantalla para editar..</p>
                                 <DownloadIcon  sx={{ fontSize: 40 }} />                      
                             </span>                
-                            <span onClick={createShiftReport} className="btn btn-outline-success funcionalidadPendiente">
+                            <span onClick={downloadShiftReport} className="btn btn-outline-success funcionalidadPendiente">
                                 <p>Btn AGREGAR OTRAS COSAS, COMBUSTIBLE, CAMINONETAS EMBAR, ECTS </p>
                                 <DownloadIcon  sx={{ fontSize: 40 }} />                      
-                            </span>               
-                            <span onClick={createShiftReport} className="btn btn-outline-success funcionalidadPendiente">
-                                <p>Btn cerrar guardia, previo modal para confirmar (pendiente) </p>
-                                <DownloadIcon  sx={{ fontSize: 40 }} />                      
-                            </span>      
+                            </span>    
+                            <CloseShiftModal />          
                         </div>
                     )}
                     

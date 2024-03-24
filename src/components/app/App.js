@@ -15,6 +15,7 @@ import RecordFormProvider from '../../providers/recordFormProvider'
 import AddNewRecord from '../records/addRecord/addNewRecord'
 import UserProfile from '../userProfile/userProfile'
 import AlertProvider from '../utils/alertContex'
+import LicensesContainer from '../licenses/licensesContainer'
 
 
 export default function App (){
@@ -37,7 +38,7 @@ export default function App (){
                             {/* RUTAS AUTHENTICADOS */}
                             <Route element={<ProtectedRoute />}> 
                                 <Route path='/dashboard' element={<AuthContent/>} />
-                                <Route path='/licenses' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}     
+                                <Route path='/licenses' element={<LicensesContainer/>}/>   
                                 <Route path='/persons' element={<AuthContent/>} /> {/* >>>>> PENDIENTE <<<<< */}   
                                 <Route path='/userProfile' element={<UserProfile/>} />   
                             </Route>
