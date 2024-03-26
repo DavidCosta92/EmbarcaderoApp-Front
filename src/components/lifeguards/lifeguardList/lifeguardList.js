@@ -20,6 +20,7 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import { Link, useNavigate } from "react-router-dom";
 import { TableHead } from "@mui/material";
 import { request } from "../../utils/axios_helper";
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 function TablePaginationActions(props) {    
   
@@ -123,8 +124,6 @@ export default function LifeguardList(){
             setRowsPerPage(response.data.results_per_page)
             setTotalResults(response.data.total_results)
             setLoadingData(false)      
-            
-
             if(response.data.pages-1 == response.data.current_page){
                 // si la pagina actual es la ultima pagina, creo filas vacias para evitar saltos al llegar a una pagina incompleta 
                 setEmptyRows(Number(response.data.results_per_page - response.data.users?.length+1))
@@ -147,6 +146,24 @@ export default function LifeguardList(){
     setPage(0);
   };
 
+  function setOrderBy(event){
+    let elementsUnselected = document.getElementsByClassName("orderByButton")
+
+    Array.from(elementsUnselected).forEach(el =>{
+        el.style.textDecoration="none"
+        el.style.borderBottom="none"
+    })
+    
+    let elementSelected
+    if(event.target.id == ""){
+        elementSelected= event.target.parentElement // si hizo click en svg
+    } else {
+        elementSelected = event.target
+    }
+    elementSelected.style.borderBottom = "3px solid #1976d2"
+    getAllPersons(page, rowsPerPage, elementSelected.id)
+  }
+
 
 
   return (
@@ -154,10 +171,10 @@ export default function LifeguardList(){
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
       <TableHead>
           <TableRow>
-            <TableCell align="center">Id</TableCell>
-            <TableCell align="center">Username</TableCell>
-            <TableCell align="center">Dni</TableCell>
-            <TableCell align="center">Nombre y Apellido</TableCell>
+            <TableCell align="center" onClick={setOrderBy} className="orderByButton" id="id">Id <FilterListIcon/></TableCell>
+            <TableCell align="center" onClick={setOrderBy} className="orderByButton" id="username">Username <FilterListIcon/></TableCell>
+            <TableCell align="center" onClick={setOrderBy} className="orderByButton" id="dni">Dni <FilterListIcon/></TableCell>
+            <TableCell align="center" onClick={setOrderBy} className="orderByButton" id="firstName">Nombre y Apellido <FilterListIcon/></TableCell>
             <TableCell align="center">Telefono </TableCell>
             <TableCell align="center">Email</TableCell>
           </TableRow>

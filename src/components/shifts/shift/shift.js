@@ -127,7 +127,10 @@ export default function Shift (){
             data )
             .then((response) => {                  
                 setSendingPostRequest(false)
-                if(response.status == 201){       
+                if(response.status == 201){    
+                    console.log("respuesta de crear shift!!!!")
+                    console.log(response.data)
+                    console.log("respuesta de crear shift!!!!")   
                     setShift(response.data)
                     renderAlert("Guardia creada!", "Exito", "success",4000)   
                 }
@@ -137,7 +140,7 @@ export default function Shift (){
                 renderAlert(error.response?.data?.message, "Error", "warning",5000)
                 setSendingPostRequest(false)
             }
-        )   
+        )  
     }
     function renderFormCreateShift(){
         return(

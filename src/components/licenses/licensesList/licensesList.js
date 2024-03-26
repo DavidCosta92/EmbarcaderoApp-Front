@@ -20,6 +20,7 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import { request } from '../../utils/axios_helper';
 import { Link, useNavigate } from "react-router-dom";
 import { TableHead } from "@mui/material";
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 function TablePaginationActions(props) {    
   
@@ -83,29 +84,6 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-/*
-function createData(name, notes, fat) {
-  return { name, calories, fat };
-}
-
-const rows = [
-  createData('Cupcake', 305, 3.7),
-  createData('Donut', 452, 25.0),
-  createData('Eclair', 262, 16.0),
-  createData('Frozen yoghurt', 159, 6.0),
-  createData('Gingerbread', 356, 16.0),
-  createData('Honeycomb', 408, 3.2),
-  createData('Ice cream sandwich', 237, 9.0),
-  createData('Jelly Bean', 375, 0.0),
-  createData('KitKat', 518, 26.0),
-  createData('Lollipop', 392, 0.2),
-  createData('Marshmallow', 318, 0),
-  createData('Nougat', 360, 19.0),
-  createData('Oreo', 437, 18.0),
-].sort((a, b) => (a.calories < b.calories ? -1 : 1));
-
-*/
-
 
 
 export default function LicensesList() {
@@ -150,7 +128,6 @@ export default function LicensesList() {
             
 
             if(response.data.pages-1 == response.data.current_page){
-                console.log("seteando a response.data.pages-1 == response.data.current_page")
                 // si la pagina actual es la ultima pagina, creo filas vacias para evitar saltos al llegar a una pagina incompleta 
                 setEmptyRows(Number(response.data.results_per_page - response.data.licenses?.length+1))
                 if(Number(response.data.total_results)  < Number(response.data.results_per_page)){
@@ -175,17 +152,34 @@ export default function LicensesList() {
 
 
 
+  function setOrderBy(event){
+    let elementsUnselected = document.getElementsByClassName("orderByButton")
+    Array.from(elementsUnselected).forEach(el =>{
+        el.style.textDecoration="none"
+        el.style.borderBottom="none"
+    })
+    
+    let elementSelected
+    if(event.target.id == ""){
+        elementSelected= event.target.parentElement // si hizo click en svg
+    } else {
+        elementSelected = event.target
+    }
+    elementSelected.style.borderBottom = "3px solid #1976d2"
+    getAllLicenses(page, rowsPerPage, elementSelected.id)
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table tableLicensesList">
       <TableHead>
           <TableRow>
-            <TableCell align="center">Matricula</TableCell>
-            <TableCell align="center">Estado</TableCell>
+            <TableCell align="center" onClick={setOrderBy} className="orderByButton" id="licenseCode" >Matricula <FilterListIcon/></TableCell>
+            <TableCell align="center" onClick={setOrderBy} className="orderByButton" id="licenseState_enum" >Estado <FilterListIcon/></TableCell>
             <TableCell align="center">Nombre, Apellido - Dni</TableCell>
             <TableCell align="center">Tel - Tel Emergencia</TableCell>
-            <TableCell align="center">Embarcacion, casco y Capacidad</TableCell>
-            <TableCell align="center">Nombre fantasia</TableCell>
+            <TableCell align="center" onClick={setOrderBy} className="orderByButton" id="registeredBoat.typeLicencedBoat_enum" >Embarcacion, casco y Capacidad <FilterListIcon/></TableCell>
+            <TableCell align="center" onClick={setOrderBy} className="orderByButton" id="registeredBoat.name" >Nombre fantasia <FilterListIcon/></TableCell>
             <TableCell align="center">Tipo motor</TableCell>
             <TableCell align="center">Notas</TableCell>
             <TableCell align="center">Acciones</TableCell>
