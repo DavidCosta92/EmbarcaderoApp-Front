@@ -19,6 +19,7 @@ import LicensesContainer from '../licenses/licensesContainer'
 import LicenseDetails from '../licenses/licenseDetails/licenseDetails'
 import LifeguardsContainer from '../lifeguards/lifeguardsContainer/lifeguardsContainer'
 import HelmsmansContainer from '../../helmsmansContainer/helmsmansContainer'
+import ShiftDetails from '../shifts/shiftDetails/shiftDetails'
 
 
 export default function App (){
@@ -46,6 +47,7 @@ export default function App (){
                                 <Route path='/lifeguards' element={<LifeguardsContainer/>}/>   
                                 <Route path='/helmsmans' element={<HelmsmansContainer/>} /> 
 
+                                <Route path='/shiftDetails' element={<ShiftDetails/>} />   
                                 <Route path='/userProfile' element={<UserProfile/>} />   
                             </Route>
 

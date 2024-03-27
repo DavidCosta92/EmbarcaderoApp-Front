@@ -91,7 +91,7 @@ export default function Shift (){
                             {renderButtonDownloadShiftReport()}             
                             <SendReportModal/>        
                             <span onClick={downloadShiftReport} className="btn btn-outline-success funcionalidadPendiente">
-                                <p>Btn EDITAR guardia, lleva a pantalla para editar..</p>
+                                <p>Editar guardia</p>
                                 <DownloadIcon  sx={{ fontSize: 40 }} />                      
                             </span>                
                             <span onClick={downloadShiftReport} className="btn btn-outline-success funcionalidadPendiente">
@@ -128,9 +128,6 @@ export default function Shift (){
             .then((response) => {                  
                 setSendingPostRequest(false)
                 if(response.status == 201){    
-                    console.log("respuesta de crear shift!!!!")
-                    console.log(response.data)
-                    console.log("respuesta de crear shift!!!!")   
                     setShift(response.data)
                     renderAlert("Guardia creada!", "Exito", "success",4000)   
                 }
